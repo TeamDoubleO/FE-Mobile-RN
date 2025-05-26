@@ -61,3 +61,20 @@ yarn-error.log
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
+
+# 환경 변수/설정 파일
+.env
+.prettierignore
+
+# Yarn (berry)
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# VSCode
+.vscode/
+
+# 테스트 커버리지
+coverage/

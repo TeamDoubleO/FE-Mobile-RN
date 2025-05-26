@@ -1,4 +1,4 @@
-import AppNavigator from './src/navigations/AppNavigator';
+import AppNavigator from './AppNavigator';
 
 const App = () => {
   return <AppNavigator />;
