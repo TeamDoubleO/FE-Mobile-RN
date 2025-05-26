@@ -1,0 +1,16 @@
+# 빌드/의존성 폴더
+node_modules
+android
+ios
+build
+dist
+# 환경파일
+.env
+# 기타
+*.png
+*.jpg
+*.svg
+*.ico
+# 번역/자동 생성 파일
+*.snap
+coverage
