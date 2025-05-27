@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { FlatList, View, Dimensions } from 'react-native';
 import { styles } from './styles/QrCards.styles';
 import QrCard from './QrCard';

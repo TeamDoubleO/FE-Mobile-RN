@@ -1,0 +1,210 @@
+import { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { getAccessList } from '../apis/MyAccessListApi';
+import { getHospitalList } from '../apis/AccessRequestApi';
+import { useAuthStore } from '../stores/authStore';
+import { mockAccessList } from '../mocks/mockAccessList';
+import { styles } from './styles/MyAccessListPage.styles';
+import MyAccessDetailModal from '../components/modals/MyAccessDetailModal';
+import NormalListDeep from '../components/lists/NormalListDeep';
+
+//병원 Id로 병원 이름 찾기
+function getHospitalNameByList(hospitalId, hospitalNameList) {
+  const hospital = hospitalNameList.find((hospital) => hospital.hospitalId === hospitalId);
+  return hospital ? hospital.hospitalName : `병원명 로딩 중 . . .병원: #${hospitalId}`;
+}
+
+const MyAccessListPage = () => {
+  const navigation = useNavigation();
+  const { setLoading } = useAuthStore();
+  const [myAccessList, setMyAccessList] = useState([]);
+  const [hospitalNameList, setHospitalNameList] = useState([]);
+
+  // Alert 관리 상태변수
+  const [showModal, setShowModal] = useState(false); // 모달 표시 여부
+  const [selectedAccess, setSelectedAccess] = useState(null); // 클릭된 출입증
+
+  // 병원 목록 불러오기
+  useEffect(() => {
+    const getHospitalsName = async () => {
+      setLoading(true);
+      try {
+        const data = await getHospitalList();
+        setHospitalNameList(data);
+      } catch (error) {
+        console.error('병원 목록 불러오기 실패:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getHospitalsName();
+  }, [setLoading]);
+
+  // 출입증 목록 불러오기
+  // useEffect(() => {
+  //   const getMyAccessList = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const data = await getAccessList();
+  //       console.log(data);
+  //       setMyAccessList(data);
+  //     } catch (error) {
+  //       console.error('출입증 목록 불러오기 실패: ', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   getMyAccessList();
+  // }, [setLoading]);
+
+  // 임시 데이터 적용
+  useEffect(() => {
+    setMyAccessList(mockAccessList);
+  }, []);
+
+  // 출입 권한 클릭 시 모달 띄우기
+  const handleItemPress = (section, item, index) => {
+    const access = item.data;
+
+    setSelectedAccess({
+      hospitalName: section.contentTitle,
+      // area: (access.accessAreaNames || []).join(',\n'),
+      area: (access.accessAreaNames || []).map((name) => `${name}`).join('\n'),
+      visitorType: getVisitCategoryLabel(access.visitCategory),
+      startDate: formatDateTime(access.startedAt),
+      expireDate: formatDateTime(access.expiredAt),
+      approval: getApprovalStatus(access.startedAt, access.expiredAt),
+      patientNumber: access.patientId,
+      issuer: access.memberId,
+      passId: access.passId,
+    });
+
+    setShowModal(true);
+  };
+
+  // visitCategory 변환 함수
+  const getVisitCategoryLabel = (category) => {
+    switch (category) {
+      case 'PATIENT':
+        return '환자';
+      case 'GUARDIAN':
+        return '보호자';
+      default:
+        return category; // 혹시 모르는 값은 그대로 표기
+    }
+  };
+
+  // 날짜 포맷 함수 (YYYY-MM-DD HH:mm)
+  const formatDateTime = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+  };
+
+  // 출입 가능 상태 함수
+  const getApprovalStatus = (startedAt, expiredAt) => {
+    const now = new Date();
+    const start = new Date(startedAt);
+    const end = new Date(expiredAt);
+
+    if (start > now) {
+      return '출입 대기';
+    } else if (end < now) {
+      return '만료';
+    } else {
+      return '출입 가능';
+    }
+  };
+
+  //병원 Id로 병원 이름 찾기
+  const getHospitalName = (hospitalId) => getHospitalNameByList(hospitalId, hospitalNameList);
+
+  // NormalListDeep에 넘길 데이터 가공
+  const sections = (myAccessList || []).reduce((acc, cur) => {
+    //acc - accumulator(누적값, 병원별로 묶안 배열), cur - current(현재 배열에서 처리중인 값)
+    const hospitalId = cur.hospitalId;
+    let hospitalName = getHospitalName(hospitalId); //id로 이름 찾아서 저장
+    let section = acc.find((sec) => sec.hospitalId === hospitalId); //현재 hospitalId와 같은 section이 있는지 찾는다.
+    if (!section) {
+      //섹션이 없으면 새로운 섹션 객체를 만들어 acc에 추가한다.
+      section = {
+        hospitalId,
+        contentTitle: hospitalName,
+        accessList: [],
+      };
+      acc.push(section);
+    }
+    section.accessList.push(cur); //해당 병원 그룹의 accessList 배열에 현재 출입증 추가
+    return acc; //누적값 반환해서 다음 루프에 이어감
+  }, []);
+
+  return (
+    <>
+      {sections.length > 0 ? (
+        <NormalListDeep
+          cardStyle={{
+            paddingHorizontal: 0,
+            borderBottomWidth: 0,
+          }}
+          sections={sections.map((section) => ({
+            ...section,
+            accessList: section.accessList.map((item) => ({ data: item })),
+          }))}
+          onItemPress={handleItemPress}
+          renderItem={(itemObj, idx, selected) => {
+            const item = itemObj.data;
+            return (
+              <View style={styles.container}>
+                <View style={styles.infoTextPadding}>
+                  <View style={styles.areaTextPadding}>
+                    <Text style={styles.textTitle}>
+                      {'[ ' + getVisitCategoryLabel(item.visitCategory) + ' ]'}
+                    </Text>
+                    {(item.accessAreaNames || []).map((area, idx) => (
+                      <Text key={idx} style={styles.areaText}>
+                        {area}
+                      </Text>
+                    ))}
+                  </View>
+                  <View style={styles.validateTextPadding}>
+                    <Text style={styles.validateText}>
+                      {getApprovalStatus(item.startedAt, item.expiredAt)}
+                    </Text>
+                  </View>
+                </View>
+                <Text style={styles.text}>
+                  시작일: {formatDateTime(item.startedAt)}
+                  {'\n'}만료일: {formatDateTime(item.expiredAt)}
+                  {'\n'}
+                </Text>
+              </View>
+            );
+          }}
+        />
+      ) : (
+        <Text style={styles.infoText}>유효한 출입증이 존재하지 않습니다.</Text>
+      )}
+
+      <MyAccessDetailModal
+        isVisible={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          setShowModal(false);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'MainPage', params: { passId: selectedAccess?.passId } }],
+          });
+        }}
+        data={selectedAccess}
+      />
+    </>
+  );
+};
+
+export default MyAccessListPage;
