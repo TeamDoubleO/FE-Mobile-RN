@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../constants/colors';
+import { fonts } from '../../../constants/fonts';
 
 export const styles = StyleSheet.create({
   // 긴 버튼 활성화 스타일 (기본 스타일)
   long: {
     minWidth: '80%',
-    height: 50,
+    height: 55,
     borderRadius: 10,
     marginTop: 10,
     justifyContent: 'center',
@@ -15,7 +16,7 @@ export const styles = StyleSheet.create({
   // 짧은 버튼 활성화 스타일
   short: {
     minWidth: '40%',
-    height: 50,
+    height: 55,
     marginTop: 10,
     borderRadius: 10,
     justifyContent: 'center',
@@ -27,8 +28,7 @@ export const styles = StyleSheet.create({
   disabled: { backgroundColor: colors.lightGray },
   // 버튼 텍스트 스타일
   text: {
-    fontSize: 20,
-    fontWeight: '500',
+    ...fonts.normalText,
     color: colors.white,
   },
 });

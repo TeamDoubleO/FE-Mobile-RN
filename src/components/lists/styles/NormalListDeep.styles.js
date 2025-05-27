@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../constants/colors';
+import { fonts } from '../../../constants/fonts';
 
 export const styles = StyleSheet.create({
   // ScrollView 스타일
@@ -12,8 +13,7 @@ export const styles = StyleSheet.create({
   },
   // 각 아이템 텍스트 스타일
   itemText: {
-    fontSize: 24,
-    fontWeight: 900,
+    ...fonts.mediumTitle,
     color: colors.black,
     paddingTop: '7%',
     paddingBottom: '2%',

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../constants/colors';
+import { fonts } from '../../../constants/fonts';
 
 export const styles = StyleSheet.create({
   inputWrapper: {
@@ -16,7 +17,7 @@ export const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     borderColor: colors.lightGreen,
-    fontSize: 17,
+    ...fonts.normalText,
     color: colors.black,
   },
   focused: { borderColor: colors.tertiary },
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
   errorText: {
     marginLeft: '2%',
     marginTop: '1%',
-    fontSize: 15,
+    ...fonts.smallText,
     color: colors.error,
   },
   isNotEditable: {

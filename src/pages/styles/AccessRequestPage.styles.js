@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../constants/colors';
+import { fonts } from '../../constants/fonts';
 
 export const styles = StyleSheet.create({
   container: {
@@ -8,21 +9,18 @@ export const styles = StyleSheet.create({
     paddingTop: '5%',
   },
   title: {
+    ...fonts.mediumTitle,
     color: colors.black,
-    fontSize: 24,
-    fontWeight: '700',
     marginTop: '5%',
     alignSelf: 'center',
     marginBottom: '5%',
   },
   itemText: {
-    fontSize: 20,
-    fontWeight: 500,
+    ...fonts.largeText,
     color: colors.black,
   },
   infoText: {
-    marginTop: '1%',
-    fontSize: 18,
+    ...fonts.largeText,
     textAlign: 'center',
     color: colors.darkGray,
     marginTop: '10%',

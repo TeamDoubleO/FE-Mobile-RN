@@ -3,8 +3,9 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   headerContainer: {
     position: 'relative', // 내용이 겹치지 않도록 설정
-    width: '100%', // 헤더
-    height: 240, // 헤더 높이
+    width: '100%',
+    height: 240,
+    marginTop: -15,
   },
   waveImage: {
     position: 'absolute',

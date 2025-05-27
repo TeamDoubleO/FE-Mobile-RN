@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../constants/colors';
+import { fonts } from '../../../constants/fonts';
 
 export const styles = StyleSheet.create({
   modalContainer: {
@@ -13,15 +14,13 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   modalTitle: {
-    fontSize: 22,
-    fontWeight: '600',
+    ...fonts.mediumTitle,
     color: colors.black,
     marginTop: '10%',
     alignSelf: 'center',
   },
   modalContentTitle: {
-    fontSize: 17,
-    fontWeight: '500',
+    ...fonts.largeText,
     color: colors.black,
     marginVertical: '5%',
     alignSelf: 'center',
@@ -32,8 +31,7 @@ export const styles = StyleSheet.create({
     marginTop: '5%',
   },
   modalText: {
-    fontSize: 17,
-    fontWeight: '500',
+    ...fonts.mediumText,
     color: colors.darkGray,
     marginTop: 2,
     lineHeight: 30,
@@ -60,8 +58,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.lightGreen,
   },
   buttonText: {
-    fontSize: 18,
-    fontWeight: '500',
+    ...fonts.mediumText,
     color: colors.white,
   },
 });

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../constants/colors';
+import { fonts } from '../../constants/fonts';
 
 export const styles = StyleSheet.create({
   scrollView: { alignItems: 'center' },
@@ -15,7 +16,7 @@ export const styles = StyleSheet.create({
     marginBottom: '5%',
   },
   text: {
-    fontSize: 20,
+    ...fonts.mediumText,
     color: colors.darkGray,
   },
   logoIconImage: {
