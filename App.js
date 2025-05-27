@@ -1,7 +1,13 @@
 import AppNavigator from './src/navigations/AppNavigator';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const App = () => {
-  return <AppNavigator />;
+  return (
+    <SafeAreaProvider>
+      <AppNavigator />
+      <SafeAreaView edges={['bottom']} />
+    </SafeAreaProvider>
+  );
 };
 
 export default App;
