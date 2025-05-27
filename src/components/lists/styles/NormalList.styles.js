@@ -9,8 +9,6 @@ export const styles = StyleSheet.create({
   },
   // ScrollView 내부 전체 컨텐츠 박스 스타일
   contentContainer: {
-    borderTopWidth: 1, // 리스트 최상단 구분선
-    borderColor: colors.lightGray,
     paddingBottom: 60,
   },
   // 각 아이템 박스 스타일

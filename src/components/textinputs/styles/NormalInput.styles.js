@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: colors.lightGreen,
     fontSize: 17,
+    color: colors.black,
   },
   focused: { borderColor: colors.tertiary },
   error: { borderColor: colors.error },

@@ -179,7 +179,7 @@ export default function MyPage() {
         </>
       )}
 
-      {/* <PasswordConfirmModal visible={isModalVisible} onCloseHandler={handleCloseModal} /> */}
+      <PasswordConfirmModal visible={isModalVisible} onCloseHandler={handleCloseModal} />
     </View>
   );
 }

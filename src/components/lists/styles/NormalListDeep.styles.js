@@ -15,10 +15,9 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 900,
     color: colors.black,
-    paddingVertical: 20,
-    paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.white,
+    paddingTop: '7%',
+    paddingBottom: '2%',
+    paddingHorizontal: '5%',
   },
   //   // 선택된 아이템 박스 스타일
   //   selectedItemBox: { backgroundColor: colors.lightGreen },
