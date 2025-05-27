@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingTop: '5%',
     alignItems: 'flex-end',
+    marginHorizontal: '3%',
   },
   text: {
     color: colors.darkGray,

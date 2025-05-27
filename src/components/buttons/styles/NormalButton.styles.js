@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.primary,
+    marginHorizontal: '2%',
   },
   // 버튼 비활성화 스타일
   disabled: { backgroundColor: colors.lightGray },

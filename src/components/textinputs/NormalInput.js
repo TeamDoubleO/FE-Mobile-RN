@@ -50,7 +50,7 @@ const NormalInput = ({
             styles.input,
             isFocused && styles.focused,
             errorText && styles.error,
-            !isEditable && styles.editable,
+            !isEditable && styles.isNotEditable,
             isSecureTextEntry && { paddingRight: '3%' }, // 눈 아이콘 공간 확보
           ]}
           secureTextEntry={isSecureTextEntry && !showPassword}

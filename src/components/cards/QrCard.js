@@ -1,9 +1,9 @@
 import { View, Text, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
+import { hospitalName } from '../../mocks/hospitalData';
 import { styles } from './styles/QrCard.styles';
 import { colors } from '../../constants/colors';
-import { hospitalName } from '../../mocks/hospitalData';
 import NormalButton from '../../components/buttons/NormalButton';
 
 // hasAccessAuthority: 출입 권한 여부, userVC : VC에 담을 사용자 정보, qrData : QR에 담을 JSON 문자열

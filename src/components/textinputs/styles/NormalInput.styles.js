@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 50,
-    marginVertical: '1.5%',
+    marginVertical: '2.5%',
     paddingLeft: '5%',
     borderWidth: 2,
     borderRadius: 10,
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.error,
   },
-  editable: {
+  isNotEditable: {
     backgroundColor: colors.background,
     color: colors.darkGray,
   },
