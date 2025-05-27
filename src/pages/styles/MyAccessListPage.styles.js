@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: colors.moreLightGray,
+    marginBottom: -10,
   },
   // 권한 구역 + 출입 가능 여부 (패딩)
   infoTextPadding: {
