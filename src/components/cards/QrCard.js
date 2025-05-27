@@ -39,9 +39,9 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
                 backgroundColor={colors.white}
               />
               <Text style={styles.userName}>{userName}</Text>
-              <Text style={styles.hospital}>{hospitalName}</Text>
-              <Text style={styles.hospital}>시작일: {startDate}</Text>
-              <Text style={styles.hospital}>만료일: {expireDate}</Text>
+              <Text style={styles.hospitalText}>{hospitalName}</Text>
+              <Text style={styles.dateText}>시작일: {startDate}</Text>
+              <Text style={styles.dateText}>만료일: {expireDate}</Text>
             </>
           ) : (
             <>

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../constants/colors';
+import { fonts } from '../../../constants/fonts';
 
 export const styles = StyleSheet.create({
   shadowWrapper: {
@@ -31,34 +32,35 @@ export const styles = StyleSheet.create({
     opacity: 0.5,
   },
   cardText: {
-    fontSize: 20,
-    fontWeight: 600,
+    ...fonts.mediumTitle,
     color: colors.black,
     textAlign: 'center',
     marginBottom: '5%',
   },
   cardSubText: {
-    fontSize: 16,
-    fontWeight: 500,
+    ...fonts.mediumText,
     color: colors.darkGray,
     textAlign: 'center',
   },
   qrTitle: {
-    fontSize: 26,
-    fontWeight: 700,
+    ...fonts.mediumTitle,
     color: colors.black,
     marginBottom: '10%',
     zIndex: 1, // QR과 텍스트를 배경 위에
   },
   userName: {
-    fontSize: 24,
-    fontWeight: 600,
+    ...fonts.smallTitle,
     color: colors.black,
     marginVertical: '8%',
   },
-  hospital: {
-    fontSize: 16,
-    fontWeight: 500,
+  hospitalText: {
+    ...fonts.mediumText,
+    color: colors.darkGray,
+    marginTop: '2%',
+    marginBottom: '3%',
+  },
+  dateText: {
+    ...fonts.smallText,
     color: colors.darkGray,
     marginTop: '2%',
   },

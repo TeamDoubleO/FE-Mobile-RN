@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../constants/colors';
+import { fonts } from '../../constants/fonts';
 
 export const styles = StyleSheet.create({
   container: {
@@ -25,14 +26,13 @@ export const styles = StyleSheet.create({
   // 권한 구역 - 환자, 보호자 여부
   textTitle: {
     width: '70%',
-    fontSize: 20,
-    fontWeight: 600,
+    ...fonts.largeText,
     color: colors.black,
     lineHeight: 30,
   },
   // 권한 구역 - 구역 이름
   areaText: {
-    fontSize: 18,
+    ...fonts.mediumText,
     color: colors.black,
     lineHeight: 28,
     marginVertical: 2,
@@ -45,21 +45,22 @@ export const styles = StyleSheet.create({
   },
   // 출입 가능 여부 글자
   validateText: {
-    fontSize: 20,
-    fontWeight: 600,
+    ...fonts.smallTitle,
     color: colors.tertiary,
   },
   // 출입증 존재하지 않을 시 텍스트
   infoText: {
     marginTop: '10%',
-    fontSize: 20,
+    ...fonts.largeText,
     textAlign: 'center',
     color: colors.darkGray,
   },
   // 시작일, 만료일 정보
   text: {
     padding: '5%',
-    fontSize: 15,
+    paddingBottom: 0,
+    lineHeight: 27,
+    ...fonts.smallText,
     color: colors.black,
   },
 });

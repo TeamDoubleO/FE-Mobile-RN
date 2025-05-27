@@ -6,9 +6,9 @@ export const styles = StyleSheet.create({
     paddingTop: '5%',
   },
   logoImage: {
-    width: 160,
+    width: 180,
     height: 60,
-    marginTop: '15%',
+    marginTop: '10%',
     alignSelf: 'center',
   },
   buttonContainer: {

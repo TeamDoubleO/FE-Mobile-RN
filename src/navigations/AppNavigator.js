@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getMyInfo } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
 import { colors } from '../constants/colors';
-
+import { fonts } from '../constants/fonts';
 import LoadingOverlay from '../components/loadings/LoadingOverlay';
 import WelcomePage from '../pages/WelcomePage';
 import LoginPage from '../pages/LoginPage';
@@ -32,6 +32,7 @@ export default function AppNavigator() {
     setAccessToken,
     clearAccessToken,
   } = useAuthStore();
+
   const [navState, setNavState] = useState(null);
 
   // 앱 시작 시 토큰 유효성 확인
@@ -75,9 +76,9 @@ export default function AppNavigator() {
       <StatusBar hidden />
       <Stack.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: colors.secondary, height: 120 },
+          headerStyle: { backgroundColor: colors.secondary, height: 100 },
           headerTintColor: colors.white,
-          headerTitleStyle: { fontWeight: '600', fontSize: 26 },
+          headerTitleStyle: { ...fonts.largeTitle },
           headerTitleAlign: 'center',
           animationEnabled: false,
           gestureEnabled: true,

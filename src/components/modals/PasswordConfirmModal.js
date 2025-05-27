@@ -9,7 +9,7 @@ import WaveHeader from '../headers/WaveHeader';
 
 const PasswordConfirmModal = ({ visible = true, onCloseHandler }) => {
   const [password, setPassword] = useState('');
-  const [errorText, setErrorText] = useState(''); // NormalText ErrorText
+  const [errorText, setErrorText] = useState(''); // mediumText ErrorText
 
   // 비밀번호 규칙 검사 핸들러 (8자 이상, 영문/숫자/특수문자 포함)
   const isValidPassword = (pw) =>

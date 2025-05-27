@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../constants/colors';
+import { fonts } from '../../../constants/fonts';
 
 export const styles = StyleSheet.create({
   // ScrollView 내부 전체 컨텐츠 박스 스타일
@@ -30,7 +31,7 @@ export const styles = StyleSheet.create({
   },
   // 문자열 스타일
   label: {
-    fontSize: 20,
+    ...fonts.normalText,
     color: colors.black,
   },
 });

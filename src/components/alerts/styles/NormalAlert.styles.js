@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../constants/colors';
+import { fonts } from '../../../constants/fonts';
 
 export const styles = StyleSheet.create({
   alert: {
@@ -9,14 +10,12 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   alertTitle: {
-    fontSize: 26,
-    fontWeight: '600',
+    ...fonts.mediumTitle,
     color: colors.black,
     marginBottom: 5,
   },
   alertMessage: {
-    fontSize: 20,
-    fontWeight: '500',
+    ...fonts.mediumText,
     color: colors.darkGray,
     marginBottom: 10,
     lineHeight: 30,
@@ -44,7 +43,6 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.lightGreen,
   },
   alertButtonText: {
-    fontSize: 18,
-    fontWeight: '500',
+    ...fonts.mediumText,
   },
 });
