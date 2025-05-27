@@ -1,15 +1,14 @@
+import { useState, useEffect } from 'react';
 import { View, Image } from 'react-native';
-import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import NormalButton from '../components/buttons/NormalButton';
-import { styles } from './styles/MainPage.styles';
-import QrCards from '../components/cards/QrCards';
 import { getAccessList } from '../apis/MyAccessListApi';
 import { getHospitalList } from '../apis/AccessRequestApi';
 import { getMyInfo } from '../apis/MyPageApi';
-// 목업 데이터
 import { mockAccessList } from '../mocks/mockAccessList';
 import { useAuthStore } from '../stores/authStore';
+import { styles } from './styles/MainPage.styles';
+import QrCards from '../components/cards/QrCards';
+import NormalButton from '../components/buttons/NormalButton';
 
 // TODO: 리펙토링 할 때 같은 코드는 export해서 import해서 쓰기
 // 병원 Id로 병원 이름 찾기
