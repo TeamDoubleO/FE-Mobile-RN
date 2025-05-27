@@ -34,10 +34,10 @@ export const styles = StyleSheet.create({
     color: colors.black,
     fontSize: 22,
     fontWeight: 600,
-    marginTop: '5%',
+    marginVertical: '5%',
   },
   submitButton: {
-    marginTop: '5%',
+    marginTop: '10%',
     marginBottom: 50,
   },
 });

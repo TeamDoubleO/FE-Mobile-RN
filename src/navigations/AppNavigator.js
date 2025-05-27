@@ -73,7 +73,6 @@ export default function AppNavigator() {
     <NavigationContainer onStateChange={setNavState} theme={navTheme}>
       <LoadingOverlay visible={loading} /*로딩*/ />
       <StatusBar hidden />
-      <HomeButtonController state={navState} />
       <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: colors.secondary, height: 120 },
