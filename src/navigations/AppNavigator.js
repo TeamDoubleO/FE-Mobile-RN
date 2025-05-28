@@ -28,6 +28,7 @@ import AccessRequestRolePage from '../pages/AccessRequestRolePage';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// StatusBar 스타일 설정
 const WHITE_TAB_SCREENS = ['MainPage', 'AlertStack', 'WelcomePage'];
 const GREEN_TAB_SCREENS = [
   'AccessStack',
@@ -37,6 +38,18 @@ const GREEN_TAB_SCREENS = [
   'SignUpVerificationPage',
 ];
 
+// Stack 네비게이터 옵션
+const screenOptions = {
+  headerStyle: { backgroundColor: colors.secondary, height: 100 },
+  headerTintColor: colors.white,
+  headerTitleStyle: { fontWeight: '600', fontSize: 26 },
+  headerTitleAlign: 'center',
+  gestureEnabled: true,
+  headerBackImage: () => <Ionicons name="chevron-back" size={24} color={colors.white} />,
+  headerBackTitle: '',
+};
+
+// 스택 네비게이터
 // 마이페이지 스택 네비게이터
 function MyPageStack() {
   return (
@@ -88,19 +101,7 @@ function AlertStack() {
   );
 }
 
-// Stack 네비게이터 옵션
-const screenOptions = {
-  headerStyle: { backgroundColor: colors.secondary, height: 100 },
-  headerTintColor: colors.white,
-  headerTitleStyle: { fontWeight: '600', fontSize: 26 },
-  headerTitleAlign: 'center',
-  gestureEnabled: true,
-  headerBackImage: () => <Ionicons name="chevron-back" size={24} color={colors.white} />,
-  headerBackTitle: '',
-};
-
 export default function AppNavigator() {
-  // 1. state, ref, store 선언부를 최상단에!
   const {
     isLoggedIn,
     setIsLoggedIn,
@@ -110,27 +111,14 @@ export default function AppNavigator() {
     setAccessToken,
     clearAccessToken,
   } = useAuthStore();
-
   const showPasswordModal = useModalStore((state) => state.showPasswordModal);
 
   // 네비게이션 객체에 직접 접근하기 위한 ref
   const navigationRef = useRef();
-
   // 현재 라우트 이름을 저장하는 state
   const [currentRouteName, setCurrentRouteName] = useState('WelcomePage');
 
-  // 2. useEffect: StatusBar 스타일 변경
-  // useEffect(() => {
-  //   if (WHITE_TAB_SCREENS.includes(currentRouteName)) {
-  //     StatusBar.setBarStyle('dark-content');
-  //     StatusBar.setBackgroundColor(colors.white);
-  //   } else if (GREEN_TAB_SCREENS.includes(currentRouteName)) {
-  //     StatusBar.setBarStyle('light-content');
-  //     StatusBar.setBackgroundColor(colors.primary);
-  //   }
-  // }, [currentRouteName]);
-
-  // 3. useEffect: 앱 시작 시 토큰 유효성 확인
+  // useEffect: 앱 시작 시 토큰 유효성 확인
   useEffect(() => {
     const checkToken = async () => {
       setLoading(true);
@@ -155,13 +143,12 @@ export default function AppNavigator() {
     checkToken();
   }, []);
 
-  // 4. 탭 클릭 시 비밀번호 모달 호출
+  // 탭 클릭 시 비밀번호 모달 호출
   const handleTabPress = (e, tabName) => {
     e.preventDefault();
     showPasswordModal(tabName, currentRouteName || 'MainPage');
   };
 
-  // 5. 네비게이션 테마
   const navTheme = {
     ...DefaultTheme,
     colors: {
@@ -170,14 +157,13 @@ export default function AppNavigator() {
     },
   };
 
-  // 6. 컴포넌트 반환부
   return (
     <NavigationContainer
       ref={navigationRef}
       onStateChange={() => {
         const route = navigationRef.current?.getCurrentRoute();
         setCurrentRouteName(route?.name);
-        console.log('currentRouteName:', route?.name); // 추가
+        console.log('currentRouteName:', route?.name); // 현재 라우트 이름을 콘솔 출력
       }}
       theme={navTheme}
     >

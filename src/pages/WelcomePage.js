@@ -1,4 +1,4 @@
-import { View, Image, Text, StatusBar } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/WelcomePage.styles';
 import NormalButton from '../components/buttons/NormalButton';
