@@ -1,7 +1,9 @@
 import { useRef } from 'react';
 import { View, TouchableOpacity, Animated, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from './styles/AnimatedTabBar.styles';
+import { colors } from '../constants/colors';
 
 const TAB_ICONS = {
   MainPage: 'home',
@@ -47,50 +49,52 @@ export default function AnimatedTabBar({ state, descriptors, navigation }) {
   };
 
   return (
-    <View style={styles.tabBar}>
-      {state.routes.map((route, index) => {
-        // 현재 탭이 포커스된 상태인지 확인
-        const isFocused = state.index === index;
-        // 현재 탭의 아이콘과 레이블 설정
-        const iconName = TAB_ICONS[route.name] || 'ellipse-outline';
-        const label = TAB_LABELS[route.name] || route.name;
+    <SafeAreaView style={{ backgroundColor: colors.white }}>
+      <View style={styles.tabBar}>
+        {state.routes.map((route, index) => {
+          // 현재 탭이 포커스된 상태인지 확인
+          const isFocused = state.index === index;
+          // 현재 탭의 아이콘과 레이블 설정
+          const iconName = TAB_ICONS[route.name] || 'ellipse-outline';
+          const label = TAB_LABELS[route.name] || route.name;
 
-        return (
-          <TouchableOpacity
-            key={route.key}
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            onPress={() => onPress(route, index, isFocused)}
-            style={styles.tab}
-            activeOpacity={0.8}
-          >
-            <Animated.View
-              style={[
-                styles.iconWrapper,
-                isFocused && styles.iconWrapperActive,
-                {
-                  transform: [
-                    { scale: scales[index] },
-                    {
-                      rotate: tilts[index].interpolate({
-                        inputRange: [-1, 0, 1],
-                        outputRange: ['-8deg', '0deg', '8deg'],
-                      }),
-                    },
-                  ],
-                },
-              ]}
+          return (
+            <TouchableOpacity
+              key={route.key}
+              accessibilityRole="button"
+              accessibilityState={isFocused ? { selected: true } : {}}
+              onPress={() => onPress(route, index, isFocused)}
+              style={styles.tab}
+              activeOpacity={0.8}
             >
-              <Ionicons
-                name={iconName}
-                size={25}
-                style={isFocused ? styles.iconActive : styles.icon}
-              />
-            </Animated.View>
-            <Text style={[styles.label, isFocused && styles.labelActive]}>{label}</Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
+              <Animated.View
+                style={[
+                  styles.iconWrapper,
+                  isFocused && styles.iconWrapperActive,
+                  {
+                    transform: [
+                      { scale: scales[index] },
+                      {
+                        rotate: tilts[index].interpolate({
+                          inputRange: [-1, 0, 1],
+                          outputRange: ['-8deg', '0deg', '8deg'],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              >
+                <Ionicons
+                  name={iconName}
+                  size={25}
+                  style={isFocused ? styles.iconActive : styles.icon}
+                />
+              </Animated.View>
+              <Text style={[styles.label, isFocused && styles.labelActive]}>{label}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </SafeAreaView>
   );
 }

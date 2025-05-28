@@ -16,7 +16,6 @@ const WelcomePage = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar hidden />
       <Image
         style={styles.logoTextImage}
         source={require('../assets/images/logoText.png')}

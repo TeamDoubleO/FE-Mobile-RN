@@ -1,3 +1,4 @@
+import { colors } from './src/constants/colors';
 import AppNavigator from './src/navigations/AppNavigator';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -5,7 +6,7 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <AppNavigator />
-      <SafeAreaView edges={['bottom']} />
+      {/* <SafeAreaView edges={['bottom']} style={{ backgroundColor: colors }} /> */}
     </SafeAreaProvider>
   );
 };
