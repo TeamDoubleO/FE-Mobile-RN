@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
   dotContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: '5%',
+    marginBottom: '10%',
+    marginTop: '-5%',
   },
 });

@@ -7,7 +7,7 @@ import DotPagination from './DotPagination';
 // 화면의 가로 길이 가져오기
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width;
-const OVERLAP = 80; // 카드가 겹치는 정도
+const OVERLAP = 90; // 카드가 겹치는 정도
 
 const QrCards = ({ userVC, hasAccessAuthority, initialIndex = 0 }) => {
   const [pageIndex, setPageIndex] = useState(initialIndex);
@@ -46,8 +46,9 @@ const QrCards = ({ userVC, hasAccessAuthority, initialIndex = 0 }) => {
 
   // 카드 리스트
   return (
-    <View style={{ flex: 0.8 }}>
+    <View style={{ flex: 1, maxHeight: 600 }}>
       <FlatList
+        removeClippedSubviews={false} // bare RN에서 렌더링 저하 해제
         ref={flatListRef}
         data={userVC}
         keyExtractor={(item) => item.did}
@@ -68,6 +69,8 @@ const QrCards = ({ userVC, hasAccessAuthority, initialIndex = 0 }) => {
               marginLeft: index === 0 ? 0 : -OVERLAP, // 첫 카드는 겹치지 않게
               alignItems: 'center',
               zIndex: pageIndex === index ? 1 : 0, // 선택된 카드가 위로 오게
+              height: '90%', // 카드 높이
+              maxHeight: 480, // 카드 최대 높이
             }}
           >
             <QrCard
