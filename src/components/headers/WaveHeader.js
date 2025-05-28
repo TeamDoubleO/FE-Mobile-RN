@@ -4,11 +4,16 @@ import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/WaveHeader.styles';
 import { colors } from '../../constants/colors';
 
-const WaveHeader = () => {
+const WaveHeader = ({ onBackPress }) => {
   const navigation = useNavigation();
 
   const handleBackButton = () => {
-    navigation.goBack();
+    if (onBackPress) {
+      // onBackPress가 전달된 경우
+      onBackPress();
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (

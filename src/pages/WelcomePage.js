@@ -1,4 +1,4 @@
-import { View, Image, Text, StatusBar } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles/WelcomePage.styles';
 import NormalButton from '../components/buttons/NormalButton';
@@ -16,7 +16,6 @@ const WelcomePage = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar hidden />
       <Image
         style={styles.logoTextImage}
         source={require('../assets/images/logoText.png')}
