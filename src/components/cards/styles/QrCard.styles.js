@@ -12,8 +12,8 @@ export const styles = StyleSheet.create({
     elevation: 7, // Android용
     borderRadius: 15,
     width: '70%',
-    height: '90%', //TODO : 기존에는 80이었는데, 추후 카드 높이 변경 필요할듯함
-    marginVertical: '10%',
+    height: '100%',
+    marginTop: '5%', // 카드 위 여백
   },
   cardContainer: {
     flex: 1, // 부모(shadowWrapper)의 크기를 꽉 채워 카드와 그림자 모양을 일치시킴

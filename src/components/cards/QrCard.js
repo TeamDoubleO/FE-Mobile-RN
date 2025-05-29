@@ -5,6 +5,7 @@ import { hospitalName } from '../../mocks/hospitalData';
 import { styles } from './styles/QrCard.styles';
 import { colors } from '../../constants/colors';
 import NormalButton from '../../components/buttons/NormalButton';
+import { qrData_sample } from '../../mocks/mockQRData';
 
 // hasAccessAuthority: 출입 권한 여부, userVC : VC에 담을 사용자 정보, qrData : QR에 담을 JSON 문자열
 const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, expireDate }) => {
@@ -25,7 +26,7 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
           resizeMode="contain" // 이미지 비율 유지
         />
         <ScrollView
-          contentContainerStyle={{ alignItems: 'center', flexGrow: 1 }}
+          contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}
           style={{ width: '100%' }}
           showsVerticalScrollIndicator={false}
         >
@@ -34,6 +35,7 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
               <Text style={styles.qrTitle}>임시 출입 QR</Text>
               <QRCode
                 value={qrData}
+                // value={qrData_sample}
                 size={140}
                 color={colors.black}
                 backgroundColor={colors.white}

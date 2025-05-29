@@ -8,12 +8,8 @@ export const styles = StyleSheet.create({
   logoImage: {
     width: 180,
     height: 60,
-    marginTop: '10%',
-    alignSelf: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     marginTop: '3%',
+    marginBottom: '7%',
+    alignSelf: 'center',
   },
 });
