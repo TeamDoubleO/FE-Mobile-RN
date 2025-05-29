@@ -78,3 +78,8 @@ yarn-error.log
 
 # 테스트 커버리지
 coverage/
+
+# Firebase-Androoid
+android/app/google-services.json
+# Firebase-iOS
+ios/GoogleService-Info.plist
