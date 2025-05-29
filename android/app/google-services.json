@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "128922981463",
+    "project_id": "keywe-ed485",
+    "storage_bucket": "keywe-ed485.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128922981463:android:3276c23eb77e9f8ab3bf12",
+        "android_client_info": {
+          "package_name": "com.keywe_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxK2SDBaPD_b8lyp9_NFgAWNtTqgXMJmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
