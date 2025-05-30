@@ -44,7 +44,7 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
     <CardFlip style={styles.shadowWrapperContainer} ref={cardFlipRef} flipDirection="y">
       {/* 앞면 */}
       <TouchableOpacity
-        activeOpacity={0.7}
+        activeOpacity={0.9}
         style={styles.shadowWrapper}
         onPress={() => cardFlipRef.current.flip()}
       >
@@ -77,7 +77,7 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
       </TouchableOpacity>
       {/* 뒷면 */}
       <TouchableOpacity
-        activeOpacity={0.8}
+        activeOpacity={0.9}
         style={styles.shadowWrapper}
         onPress={() => cardFlipRef.current.flip()}
       >
