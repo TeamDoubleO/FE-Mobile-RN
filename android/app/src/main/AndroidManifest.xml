@@ -19,7 +19,7 @@
         tools:replace="android:exported">
         <intent-filter>
             <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            <!-- <action android:name="push_click"/> -->
+            <action android:name="push_click"/>
         </intent-filter>
       </service>
       <activity
