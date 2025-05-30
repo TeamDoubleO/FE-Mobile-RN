@@ -20,6 +20,7 @@ const App = () => {
 
   //   getToken();
   // }, []);
+
   return (
     <SafeAreaProvider>
       <AppNavigator />
