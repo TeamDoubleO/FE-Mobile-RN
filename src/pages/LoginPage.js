@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import messaging from '@react-native-firebase/messaging';
 import { loginUser } from '../apis/LoginApi';
 import { useAuthStore } from '../stores/authStore';
 import { styles } from './styles/LoginPage.styles';
@@ -17,6 +18,7 @@ const LoginPage = () => {
   const [form, setForm] = useState({
     email: '', // 이메일
     pw: '', // 비밀번호
+    fcmToken: '', // FCM 토큰
   });
 
   // Alert 관리 상태변수
@@ -67,8 +69,12 @@ const LoginPage = () => {
     }
 
     try {
+      // FCM 토큰 가져오기
+      const fcmToken = await messaging().getToken();
+      const newForm = { ...form, fcmToken };
+
       //로그인 API 연결
-      const data = await loginUser(form);
+      const data = await loginUser(newForm);
       //토큰 있어야만 저장하도록함
       if (data && data.data.accessToken) {
         setOnlyAccessToken(data.data.accessToken);
