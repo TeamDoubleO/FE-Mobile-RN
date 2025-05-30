@@ -50,7 +50,7 @@ const QrCards = ({ userVC, hasAccessAuthority, initialIndex = 0 }) => {
 
   // 카드 리스트
   return (
-    <View style={{ flex: 1, maxHeight: 600 }}>
+    <View style={{ flex: 1, maxHeight: 650 }}>
       <Animated.FlatList
         removeClippedSubviews={false} // bare RN에서 렌더링 저하 해제
         ref={flatListRef}
@@ -100,6 +100,7 @@ const QrCards = ({ userVC, hasAccessAuthority, initialIndex = 0 }) => {
                 height: '90%', // 카드 높이
                 maxHeight: 480, // 카드 최대 높이
                 transform: [{ scale }],
+                marginTop: '9%',
               }}
             >
               <QrCard

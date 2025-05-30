@@ -3,6 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppNavigator from './src/navigations/AppNavigator';
 // import { firebase } from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
+import TestCard from './TestCard';
 
 const App = () => {
   // useEffect(() => {

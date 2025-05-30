@@ -1,9 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { colors } from '../../../constants/colors';
 import { fonts } from '../../../constants/fonts';
 
+const { width } = Dimensions.get('window');
+
 export const styles = StyleSheet.create({
+  shadowWrapperContainer: {
+    height: '100%', // 카드 높이를 부모에 맞춤
+  },
   shadowWrapper: {
+    flex: 1,
     // 그림자 설정
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
@@ -11,9 +17,8 @@ export const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 7, // Android용
     borderRadius: 15,
-    width: '70%',
-    height: '100%',
-    marginTop: '5%', // 카드 위 여백
+    width: width * 0.7, // 카드 가로 크기 (화면의 70%)
+    alignSelf: 'center',
   },
   cardContainer: {
     flex: 1, // 부모(shadowWrapper)의 크기를 꽉 채워 카드와 그림자 모양을 일치시킴
@@ -63,5 +68,36 @@ export const styles = StyleSheet.create({
     ...fonts.smallText,
     color: colors.darkGray,
     marginTop: '2%',
+  },
+  flipHint: {
+    marginTop: 16,
+    ...fonts.smallText,
+    color: '#888',
+    textAlign: 'center',
+  },
+  // 뒷면
+  qrFullWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // QR이 최대한 꽉 차게
+    width: '100%',
+    height: '100%',
+    padding: 0,
+    margin: 0,
+  },
+  backCard: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 0,
+  },
+  flipHintBack: {
+    marginTop: 10,
+    ...fonts.smallText,
+    color: '#888',
+    textAlign: 'center',
+    position: 'absolute',
+    bottom: 24,
+    width: '100%',
   },
 });
