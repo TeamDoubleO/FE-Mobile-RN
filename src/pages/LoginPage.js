@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import messaging from '@react-native-firebase/messaging';
+import { getMessaging, getToken } from '@react-native-firebase/messaging';
+import { getApp } from '@react-native-firebase/app';
 import { loginUser } from '../apis/LoginApi';
 import { useAuthStore } from '../stores/authStore';
 import { styles } from './styles/LoginPage.styles';
@@ -70,7 +71,11 @@ const LoginPage = () => {
 
     try {
       // FCM 토큰 가져오기
-      const fcmToken = await messaging().getToken();
+      const app = getApp();
+      const messaging = getMessaging(app);
+      const fcmToken = await getToken(messaging);
+
+      console.log('token: ', fcmToken);
       const newForm = { ...form, fcmToken };
 
       //로그인 API 연결

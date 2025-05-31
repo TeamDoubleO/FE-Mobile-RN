@@ -17,8 +17,6 @@ const AccessRequestPage = () => {
       setLoading(true);
       try {
         const data = await getHospitalList();
-        console.log(data);
-
         setHospitalName(data);
       } catch (error) {
         console.error('병원 목록 불러오기 실패:', error);

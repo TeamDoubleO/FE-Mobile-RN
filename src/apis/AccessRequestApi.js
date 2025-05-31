@@ -6,15 +6,29 @@ export const getHospitalList = async () => {
   return response.data.data;
 };
 
-// 환자 번호 검증
-// TODO: X-Hospital-Id 수정
-export const verifyPatientCode = async (patientCode) => {
+// 환자용: 본인 정보 검증
+export const verifyPatientInfo = async (hospitalId) => {
   const response = await axios.post(
-    '/patients/code',
+    '/patients/verify/patient',
+    {},
+    {
+      headers: {
+        'X-Hospital-Id': hospitalId,
+      },
+    },
+  );
+
+  return response.data;
+};
+
+// 보호자용: 환자 번호 검증
+export const verifyPatientCode = async (patientCode, hospitalId) => {
+  const response = await axios.post(
+    '/patients/verify/guardian',
     { patientCode },
     {
       headers: {
-        'X-Hospital-Id': '1',
+        'X-Hospital-Id': hospitalId,
       },
     },
   );
@@ -30,4 +44,22 @@ export const getAvailableDates = async (hospitalId) => {
     },
   });
   return response.data.data.availableDates;
+};
+
+// 출입증 신청
+export const createAccessPass = async (form) => {
+  const response = await axios.post(
+    '/passes',
+    {
+      visitCategory: form.visitCategory,
+      patientCode: form.patientCode,
+      startAt: form.checkedDate,
+    },
+    {
+      headers: {
+        'X-Hospital-Id': form.hospitalId,
+      },
+    },
+  );
+  return response.data;
 };
