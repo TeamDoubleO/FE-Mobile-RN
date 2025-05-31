@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
+import { verifyPatientInfo } from '../../apis/AccessRequestApi';
 import { getMyInfo } from '../../apis/MyPageApi';
 import { useAuthStore } from '../../stores/authStore';
 import { styles } from './styles/PatientVerficationForm.styles';
@@ -7,7 +8,7 @@ import NormalButton from '../buttons/NormalButton';
 import NormalInput from '../textinputs/NormalInput';
 import NormalAlert from '../alerts/NormalAlert';
 
-const PatientVerficationForm = ({ onVerifiedHandler }) => {
+const PatientVerficationForm = ({ hospitalId, onVerifiedHandler }) => {
   const { setLoading } = useAuthStore();
   const [userInfo, setUserInfo] = useState({ name: '', birth: '', contact: '' }); // 회원 정보 관리
   const [isVerified, setIsVerified] = useState(false);
@@ -39,25 +40,18 @@ const PatientVerficationForm = ({ onVerifiedHandler }) => {
 
   const handleVerifyPatient = async () => {
     setLoading(true);
-    // TODO: 환자 번호 검증 API 연결
-    // 임시 검증 로직
     try {
-      const isValid = true; // 예시 조건
+      await verifyPatientInfo(hospitalId);
 
-      if (isValid) {
-        // 유효한 환자 정보
-        setIsVerified(true);
-        setAlertMessage(`환자 정보가 정상적으로 확인되었습니다.\n방문 날짜를 선택해 주세요.`);
-        onVerifiedHandler(userInfo); // 부모에게 환자 정보 전달
-        setShowVerifiedAlert(true);
-      } else {
-        // 유효하지 않은 환자 정보
-        setIsVerified(false);
-        setAlertMessage(`일치하는 환자 정보가\n존재하지 않습니다.\n해당 병원에 문의해 주세요.`);
-        setShowVerifiedAlert(true);
-      }
+      // 유효한 환자 정보
+      setIsVerified(true);
+      setAlertMessage(`정보가 정상적으로 확인되었습니다.\n방문 날짜를 선택해 주세요.`);
+      onVerifiedHandler(userInfo); // 부모에게 환자 정보 전달
+      setShowVerifiedAlert(true);
     } catch (error) {
+      // 유효하지 않은 환자 정보
       setIsVerified(false);
+      setAlertMessage(`일치하는 환자 정보가\n존재하지 않습니다.\n해당 병원에 문의해 주세요.`);
       setShowVerifiedAlert(true);
     } finally {
       setLoading(false);

@@ -23,6 +23,12 @@ const AccessRequestRolePage = ({ route }) => {
 
   // 방문 가능 날짜 불러오기
   useEffect(() => {
+    // isVerified가 true일 때만 실행
+    if (!isVerified) {
+      setAvailableDates([]); // 검증 전엔 날짜 초기화
+      return;
+    }
+
     const fetchAvailableDates = async () => {
       setLoading(true);
       try {
@@ -36,7 +42,7 @@ const AccessRequestRolePage = ({ route }) => {
     };
 
     fetchAvailableDates();
-  }, [hospitalId]);
+  }, [isVerified, hospitalId]);
 
   // Alert 관리 상태변수
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
@@ -130,9 +136,9 @@ const AccessRequestRolePage = ({ route }) => {
         {/* 환자 신청 정보 검증 컴포넌트 & 보호자 신청 정보 검증 컴포넌트 분리 */}
         <View style={styles.contentContainer}>
           {role === 'patient' ? (
-            <PatientVerficationForm onVerifiedHandler={handleVerified} />
+            <PatientVerficationForm hospitalId={hospitalId} onVerifiedHandler={handleVerified} />
           ) : (
-            <GuardianVerificationForm onVerifiedHandler={handleVerified} />
+            <GuardianVerificationForm hospitalId={hospitalId} onVerifiedHandler={handleVerified} />
           )}
 
           {/* 검증 성공 후에만 방문일시 + 신청 버튼 표시 */}

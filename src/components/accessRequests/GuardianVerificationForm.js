@@ -6,7 +6,7 @@ import { styles } from './styles/GuardianVerificationForm.styles';
 import NormalInput from '../textinputs/NormalInput';
 import NormalAlert from '../alerts/NormalAlert';
 
-const GuardianVerificationForm = ({ onVerifiedHandler }) => {
+const GuardianVerificationForm = ({ hospitalId, onVerifiedHandler }) => {
   const { setLoading } = useAuthStore();
   const [patientCode, setPatientCode] = useState(''); // 환자 번호 관리
   const [isVerified, setIsVerified] = useState(false);
@@ -19,7 +19,7 @@ const GuardianVerificationForm = ({ onVerifiedHandler }) => {
   const handleVerifyPatient = async () => {
     setLoading(true);
     try {
-      await verifyPatientCode(patientCode);
+      await verifyPatientCode(patientCode, hospitalId);
 
       // 유효한 환자 번호
       setIsVerified(true);

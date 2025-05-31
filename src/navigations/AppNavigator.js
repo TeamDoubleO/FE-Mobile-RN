@@ -163,7 +163,6 @@ export default function AppNavigator() {
       onStateChange={() => {
         const route = navigationRef.current?.getCurrentRoute();
         setCurrentRouteName(route?.name);
-        console.log('currentRouteName:', route?.name); // 현재 라우트 이름을 콘솔 출력
       }}
       theme={navTheme}
     >
