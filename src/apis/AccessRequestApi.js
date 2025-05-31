@@ -45,3 +45,21 @@ export const getAvailableDates = async (hospitalId) => {
   });
   return response.data.data.availableDates;
 };
+
+// 출입증 신청
+export const createAccessPass = async (form) => {
+  const response = await axios.post(
+    '/passes',
+    {
+      visitCategory: form.visitCategory,
+      patientCode: form.patientCode,
+      startAt: form.checkedDate,
+    },
+    {
+      headers: {
+        'X-Hospital-Id': form.hospitalId,
+      },
+    },
+  );
+  return response.data;
+};

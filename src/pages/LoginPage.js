@@ -71,6 +71,8 @@ const LoginPage = () => {
     try {
       // FCM 토큰 가져오기
       const fcmToken = await messaging().getToken();
+
+      console.log('token: ', fcmToken);
       const newForm = { ...form, fcmToken };
 
       //로그인 API 연결

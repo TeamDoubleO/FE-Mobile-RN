@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 import { getAvailableDates } from '../apis/AccessRequestApi';
+import { createAccessPass } from '../apis/AccessRequestApi';
 import { useAuthStore } from '../stores/authStore';
 import { styles } from './styles/AccessRequestRolePage.styles';
 import NormalButton from '../components/buttons/NormalButton';
@@ -15,10 +16,10 @@ const AccessRequestRolePage = ({ route }) => {
   const { setLoading } = useAuthStore();
   const { hospitalId, hospitalName } = route.params;
 
-  const [role, setRole] = useState('patient');
+  const [role, setRole] = useState('PATIENT');
   const [isVerified, setIsVerified] = useState(false); // 검증 여부
   const [verifiedData, setVerifiedData] = useState(null); // 자식 컴포넌트의 검증 정보
-  const [checkedDates, setCheckedDates] = useState([]);
+  const [checkedDate, setCheckedDate] = useState([]);
   const [availableDates, setAvailableDates] = useState([]); // 방문 가능 날짜 설정
 
   // 방문 가능 날짜 불러오기
@@ -61,13 +62,13 @@ const AccessRequestRolePage = ({ route }) => {
   const handlePatientButton = () => {
     setIsVerified(false);
     setVerifiedData(null);
-    setRole('patient');
+    setRole('PATIENT');
   };
 
   const handleGuardianButton = () => {
     setIsVerified(false);
     setVerifiedData(null);
-    setRole('guardian');
+    setRole('GUARDIAN');
   };
 
   const handleVerified = (data) => {
@@ -76,15 +77,13 @@ const AccessRequestRolePage = ({ route }) => {
   };
 
   const handleDateCheckbox = (newCheckedList) => {
-    setCheckedDates(newCheckedList);
+    setCheckedDate(newCheckedList);
   };
 
   // 방문증 신청 버튼 클릭 핸들러
   const handleSubmitButton = () => {
-    // TODO: 방문증 신청 API 연동 (환자/보호자 전송 & 검증 정보 전송)
-
     // 날짜 선택 안 하고, 신청 버튼 클릭 시 alert 출력
-    if (checkedDates.filter(Boolean).length === 0) {
+    if (checkedDate.filter(Boolean).length === 0) {
       setShowErrorAlert(true);
     } else {
       setShowConfirmAlert(true);
@@ -92,11 +91,34 @@ const AccessRequestRolePage = ({ route }) => {
   };
 
   // 방문증 신청 확인 버튼 클릭 핸들러
-  const handleConfirmChange = () => {
+  const handleConfirmChange = async () => {
     setShowConfirmAlert(false);
     setTimeout(() => {
       setShowSuccessAlert(true);
     }, 300); // 300ms 정도 텀을 둠 (ios는 모달이 닫히자 마자 열리게 하면)
+
+    try {
+      setLoading(true);
+
+      // checkedDate에서 true인 인덱스 찾기
+      const selectedIdx = checkedDate.findIndex(Boolean);
+      const selectedDate = selectedIdx >= 0 ? availableDates[selectedIdx] : null;
+
+      // 폼 데이터 구성
+      const form = {
+        hospitalId,
+        visitCategory: role,
+        patientCode: verifiedData,
+        checkedDate: selectedDate,
+      };
+
+      await createAccessPass(form);
+      setShowSuccessAlert(true);
+    } catch (error) {
+      setShowErrorAlert(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 방문증 신청 성공 핸들러
@@ -123,19 +145,19 @@ const AccessRequestRolePage = ({ route }) => {
             title="환자"
             length="short"
             onPressHandler={handlePatientButton}
-            isDisabled={role === 'guardian'}
+            isDisabled={role === 'GUARDIAN'}
           />
           <NormalButton
             title="보호자"
             length="short"
             onPressHandler={handleGuardianButton}
-            isDisabled={role === 'patient'}
+            isDisabled={role === 'PATIENT'}
           />
         </View>
 
         {/* 환자 신청 정보 검증 컴포넌트 & 보호자 신청 정보 검증 컴포넌트 분리 */}
         <View style={styles.contentContainer}>
-          {role === 'patient' ? (
+          {role === 'PATIENT' ? (
             <PatientVerficationForm hospitalId={hospitalId} onVerifiedHandler={handleVerified} />
           ) : (
             <GuardianVerificationForm hospitalId={hospitalId} onVerifiedHandler={handleVerified} />
