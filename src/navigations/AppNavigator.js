@@ -18,7 +18,7 @@ import SignUpPage from '../pages/SignUpPage';
 import SignUpVerificationPage from '../pages/SignUpVerificationPage';
 import MainPage from '../pages/MainPage';
 import MyPage from '../pages/MyPage';
-import AlertListPage from '../pages/AlertListPage';
+import NoticeListPage from '../pages/NoticeListPage';
 import ChangePasswordPage from '../pages/ChangePasswordPage';
 import AccessListPage from '../pages/AccessListPage';
 import MyAccessListPage from '../pages/MyAccessListPage';
@@ -96,7 +96,7 @@ function AccessStack() {
 function AlertStack() {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="AlertListPage" component={AlertListPage} options={{ title: '알림' }} />
+      <Stack.Screen name="NoticeListPage" component={NoticeListPage} options={{ title: '알림' }} />
     </Stack.Navigator>
   );
 }
