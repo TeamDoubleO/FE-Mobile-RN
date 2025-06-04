@@ -9,14 +9,14 @@ const TAB_ICONS = {
   MainPage: 'home',
   AccessStack: 'list',
   MyPageStack: 'person-sharp',
-  AlertStack: 'notifications',
+  NoticeStack: 'notifications',
 };
 
 const TAB_LABELS = {
   MainPage: '홈',
   AccessStack: '출입 권한',
   MyPageStack: '마이페이지',
-  AlertStack: '알림',
+  NoticeStack: '알림',
 };
 
 export default function AnimatedTabBar({ state, descriptors, navigation }) {
