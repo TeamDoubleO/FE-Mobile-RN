@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { getNoticeList } from '../apis/NoticeListApi';
+import { View } from 'react-native';
+import { getNoticeList, deleteAllNotice } from '../apis/NoticeListApi';
 import { useAuthStore } from '../stores/authStore';
-import { colors } from '../constants/colors';
+import { useNormalAlertStore } from '../stores/alertStore';
 import NoticeList from '../components/notices/NoticeList';
+import GrayButton from '../components/buttons/GrayButton';
+import { styles } from './styles/NoticeListPage.styles';
 
 const alertData = [
   {
@@ -44,6 +46,7 @@ function convertToOldFormat(data) {
 
 export default function NoticeListPage() {
   const { setLoading } = useAuthStore();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
   const [noticeList, setNoticeList] = useState([]);
 
   // 알림 목록 조회 api 사용시
@@ -68,16 +71,44 @@ export default function NoticeListPage() {
     setNoticeList(convertToOldFormat(alertData));
   }, []);
 
+  // 회원 탈퇴 버튼 클릭 핸들러
+  const handleDeleteAllNotice = () => {
+    showNormalAlert({
+      title: '알림 전체 삭제 ',
+      message: '알림 목록을 전체 삭제하시겠습니까?',
+      showCancel: true,
+      onConfirmHandler: handleDeleteAllNoticeConfirm,
+    });
+  };
+
+  const handleDeleteAllNoticeConfirm = async () => {
+    try {
+      await deleteAllNotice();
+      setNoticeList([]);
+      showNormalAlert({
+        title: '알림 삭제 완료',
+        message: '',
+      });
+    } catch (error) {
+      showNormalAlert({
+        title: '알림 삭제 실패',
+        message: '오류가 발생했습니다.\n다시 시도해 주세요',
+        confirmText: '확인',
+      });
+      console.log('알림 삭제 실패:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
+      <View style={styles.btnStyle}>
+        <GrayButton
+          title="알림 전체 삭제"
+          onPressHandler={handleDeleteAllNotice}
+          style={styles.text}
+        />
+      </View>
       <NoticeList data={noticeList} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.primary,
-  },
-});
