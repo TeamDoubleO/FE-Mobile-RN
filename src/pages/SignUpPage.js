@@ -4,8 +4,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { createMemberInfo } from '../apis/SignUpApi';
 import { useAuthStore } from '../stores/authStore';
+import { useNormalAlertStore } from '../stores/alertStore';
 import { styles } from './styles/SignUpPage.styles';
-import NormalAlert from '../components/alerts/NormalAlert';
 import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
 import NormalButton from '../components/buttons/NormalButton';
@@ -40,11 +40,6 @@ const SignUpPage = () => {
 
   const { name, rrn, phone } = route.params || {};
 
-  // Alert 관리 상태변수
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [errorAlertMessage, setErrorAlertMessage] = useState('');
-
   //상태 변수
   const [form, setForm] = useState({
     name: name || '', // 이름
@@ -54,18 +49,26 @@ const SignUpPage = () => {
     pw: '', // 비밀번호
     pwCheck: '', // 비밀번호 확인
   });
-  //이메일 형식 검증 함수
-  const isValidEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-  // 비밀번호 규칙 검사 (8자 이상, 영문/숫자/특수문자 포함)
-  const isValidPassword = (pw) =>
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/.test(pw);
-  // 전화번호, 주민들록 번호 검사 추가 필요
 
   const [error, setError] = useState({}); // 에러 메시지
   const [isPwValid, setIsPwValid] = useState(false); //비밀번호 유효성
   const [isPwMatch, setIsPwMatch] = useState(false); //비밀번호 일치성
+
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
+  const navigateToLogin = () => {
+    navigation.navigate('LoginPage');
+  };
+
+  //이메일 형식 검증 함수
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  // 비밀번호 규칙 검사 (8자 이상, 영문/숫자/특수문자 포함)
+  const isValidPassword = (pw) =>
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/.test(pw);
+  // 전화번호, 주민들록 번호 검사 추가 필요
 
   //공통 핸들러 - 입력값 변경을 처리
   const handleInputChange = (field, value) => {
@@ -109,35 +112,27 @@ const SignUpPage = () => {
     try {
       //회원가입 API 요청
       await createMemberInfo(form);
-      setShowSuccessAlert(true); // Alert 상태변수 값 변경
+      showNormalAlert({
+        title: '회원가입 완료',
+        message: `회원가입이 완료되었습니다.\n로그인 후 이용해 주세요.`,
+        onConfirmHandler: () => navigation.navigate('LoginPage'),
+      });
     } catch (error) {
       const status = error.response.data.status;
       let message = '회원가입에 실패했습니다.';
-
       if (status === 400) {
         message = `입력 정보 확인 후\n다시 가입해 주세요.`;
       } else if (status === 409) {
         message = `이미 가입된 계정입니다.`;
       }
 
-      setErrorAlertMessage(message);
-      setShowErrorAlert(true);
+      showNormalAlert({
+        title: '회원가입 실패',
+        message,
+      });
     } finally {
       setLoading(false);
     }
-  };
-
-  //로그인 페이지로 이동하는 함수
-  const navigateToLogin = () => {
-    navigation.navigate('LoginPage');
-  };
-
-  // Alert 창 확인 버튼 클릭 핸들러
-  const handleAlertConfirm = () => {
-    setShowSuccessAlert(false);
-
-    //로그인 페이지로 이동
-    navigation.navigate('LoginPage');
   };
 
   return (
@@ -159,12 +154,6 @@ const SignUpPage = () => {
           value={form.name}
           inputWrpperWidth={{ width: '80%' }}
         />
-        {/* <NormalInput
-        placeholder="주민등록번호"
-        errorText={error.rrn}
-        isEditable={false}
-        value={form.rrn}
-      /> */}
         <NormalInput
           placeholder="생년월일"
           errorText={undefined}
@@ -212,19 +201,6 @@ const SignUpPage = () => {
         <GrayButton title="로그인 하러 가기" onPressHandler={navigateToLogin} />
         <View style={styles.gongback}></View>
       </KeyboardAwareScrollView>
-
-      <NormalAlert
-        show={showSuccessAlert}
-        title="회원가입 완료"
-        message={`회원가입이 완료되었습니다.\n로그인 후 이용해 주세요.`}
-        onConfirmHandler={handleAlertConfirm}
-      />
-      <NormalAlert
-        show={showErrorAlert}
-        title="회원가입 실패"
-        message={errorAlertMessage}
-        onConfirmHandler={() => setShowErrorAlert(false)}
-      />
     </>
   );
 };

@@ -4,11 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { updatePassword } from '../apis/PasswordApi';
 import { useAuthStore } from '../stores/authStore';
+import { useNormalAlertStore } from '../stores/alertStore';
 import { styles } from './styles/ChangePasswordPage.styles';
 import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
 import NormalButton from '../components/buttons/NormalButton';
-import NormalAlert from '../components/alerts/NormalAlert';
 
 const ChangePasswordPage = () => {
   const { setLoading } = useAuthStore();
@@ -18,13 +18,8 @@ const ChangePasswordPage = () => {
   const [isVerified, setIsVerified] = useState(false); // 새 비밀번호 확인 인증 여부
   const [isSubmitted, setIsSubmitted] = useState(false); // 제출 버튼 눌렀는지 여부
 
-  // Alert 관리 상태변수
-  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [errorAlertMessage, setErrorAlertMessage] = useState('');
-
   const navigation = useNavigation();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   // 비밀번호 규칙 검사 핸들러 (8자 이상, 영문/숫자/특수문자 포함)
   const isValidPassword = (pw) =>
@@ -33,6 +28,13 @@ const ChangePasswordPage = () => {
   useEffect(() => {
     setIsVerified(confirmNewPassword === newPassword);
   }, [confirmNewPassword, newPassword]);
+
+  const navigateToHome = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'MainPage' }],
+    });
+  };
 
   // 변경 버튼 클릭 핸들러
   const handlePressButton = () => {
@@ -43,18 +45,26 @@ const ChangePasswordPage = () => {
       return;
     }
 
-    setShowConfirmAlert(true);
+    showNormalAlert({
+      title: '비밀번호 변경',
+      message: '비밀번호를 변경하시겠습니까?',
+      showCancel: true,
+      onConfirmHandler: handleConfirmChange,
+    });
   };
 
   // 비밀번호 변경 확인 버튼 클릭 핸들러
   const handleConfirmChange = async () => {
-    setShowConfirmAlert(false);
     setLoading(true);
     try {
       await updatePassword({ originalPassword, newPassword });
 
       setTimeout(() => {
-        setShowSuccessAlert(true);
+        showNormalAlert({
+          title: '비밀번호 변경 완료',
+          message: `비밀번호가 변경되었습니다.\n메인 페이지로 이동합니다.`,
+          onConfirmHandler: navigateToHome,
+        });
       }, 300);
     } catch (error) {
       const status = error.response.data.status;
@@ -66,18 +76,14 @@ const ChangePasswordPage = () => {
         message = `기존과 동일한 비밀번호는\n사용하실 수 없습니다.`;
       }
 
-      setErrorAlertMessage(message);
-      setShowErrorAlert(true);
+      showNormalAlert({
+        title: '비밀번호 변경 실패',
+        message,
+        confirmText: '확인',
+      });
     } finally {
       setLoading(false);
     }
-  };
-
-  // 비밀번호 변경 성공 핸들러
-  const handleSuccessConfirm = () => {
-    setShowSuccessAlert(false);
-    // 메인 페이지로 이동되도록 설정
-    navigation.navigate('MainPage');
   };
 
   return (
@@ -131,34 +137,6 @@ const ChangePasswordPage = () => {
           <NormalButton title="변경" style={styles.button} onPressHandler={handlePressButton} />
         </View>
       </KeyboardAwareScrollView>
-
-      {/* 변경 확인 알림 */}
-      <NormalAlert
-        show={showConfirmAlert}
-        title="비밀번호 변경"
-        message="비밀번호를 변경하시겠습니까?"
-        // 버튼 설정
-        showCancel={true}
-        // 동작 제어
-        onConfirmHandler={handleConfirmChange}
-        onCancelHandler={() => setShowConfirmAlert(false)}
-      />
-
-      {/* 성공 메시지 알림 */}
-      <NormalAlert
-        show={showSuccessAlert}
-        title="비밀번호 변경 완료"
-        message={`비밀번호가 변경되었습니다.\n메인 페이지로 이동합니다.`}
-        // 동작 제어
-        onConfirmHandler={handleSuccessConfirm}
-      />
-
-      <NormalAlert
-        show={showErrorAlert}
-        title="비밀번호 변경 실패"
-        message={errorAlertMessage}
-        onConfirmHandler={() => setShowErrorAlert(false)}
-      />
     </>
   );
 };
