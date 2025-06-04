@@ -27,6 +27,19 @@ const MyAccessDetailModal = ({ isVisible, onClose, onConfirm, data }) => {
     }, 250);
   };
 
+  let relationDetail = null;
+  if (data.visitorType === '환자' && Array.isArray(data.guardians) && data.guardians.length > 0) {
+    // 환자인 경우 보호자 목록 표시
+    relationDetail = data.guardians.map((g, idx) => (
+      <Text style={styles.modalText} key={idx}>{`${g.name}\t|\t${g.contact}`}</Text>
+    ));
+  } else if (data.visitorType === '보호자' && data.patientName) {
+    // 보호자인 경우 환자 이름 표시
+    relationDetail = <Text style={styles.modalText}>{data.patientName}</Text>;
+  } else {
+    relationDetail = <Text style={styles.modalText}>정보 없음</Text>;
+  }
+
   return (
     <Modal isVisible={isVisible} onBackdropPress={onClose}>
       <View style={styles.modalContainer}>
@@ -43,10 +56,9 @@ const MyAccessDetailModal = ({ isVisible, onClose, onConfirm, data }) => {
             <Text style={styles.modalText}>승인 여부: {data.approval}</Text>
             <Text style={styles.modalText}>환자 번호: {data.patientNumber}</Text>
           </View>
-          <View style={styles.textContainer}>
+          <View style={[styles.textContainer, { alignItems: 'center' }]}>
             <Text style={styles.modalContentTitle}>{relationTitle}</Text>
-            <Text style={styles.modalText}>{`김지수\t|\t010-0000-0000`}</Text>
-            <Text style={styles.modalText}>{`손민지\t|\t010-1111-1111`}</Text>
+            {relationDetail}
           </View>
         </ScrollView>
 
