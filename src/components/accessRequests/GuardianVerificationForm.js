@@ -29,7 +29,6 @@ const GuardianVerificationForm = ({ hospitalId, onVerifiedHandler }) => {
           onVerifiedHandler(patientCode); // 부모에게 환자 정보 전달
         },
       });
-      setShowVerifiedAlert(true);
     } catch (error) {
       // 유효하지 않은 환자 번호
       setIsVerified(false);
