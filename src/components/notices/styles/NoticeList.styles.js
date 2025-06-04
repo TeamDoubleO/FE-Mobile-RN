@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   dateText: {
-    ...fonts.smallText,
+    ...fonts.mediumText,
     color: colors.white,
     padding: 10,
   },

@@ -33,7 +33,7 @@ export default function NoticeItem({ type, time, message }) {
         </View>
         <Text style={styles.text}>{time}</Text>
       </View>
-      <Text>{message}</Text>
+      <Text style={styles.text}>{message}</Text>
     </View>
   );
 }
