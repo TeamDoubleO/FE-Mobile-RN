@@ -5,10 +5,10 @@ import { useNavigation } from '@react-navigation/native';
 import { getAvailableDates } from '../apis/AccessRequestApi';
 import { createAccessPass } from '../apis/AccessRequestApi';
 import { useAuthStore } from '../stores/authStore';
+import { useNormalAlertStore } from '../stores/alertStore';
 import { styles } from './styles/AccessRequestRolePage.styles';
 import NormalButton from '../components/buttons/NormalButton';
 import NormalCheckbox from '../components/checkboxes/NormalCheckbox';
-import NormalAlert from '../components/alerts/NormalAlert';
 import PatientVerficationForm from '../components/accessRequests/PatientVerficationForm';
 import GuardianVerificationForm from '../components/accessRequests/GuardianVerificationForm';
 
@@ -21,6 +21,9 @@ const AccessRequestRolePage = ({ route }) => {
   const [verifiedData, setVerifiedData] = useState(null); // 자식 컴포넌트의 검증 정보
   const [checkedDate, setCheckedDate] = useState([]);
   const [availableDates, setAvailableDates] = useState([]); // 방문 가능 날짜 설정
+
+  const navigation = useNavigation();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   // 방문 가능 날짜 불러오기
   useEffect(() => {
@@ -44,13 +47,6 @@ const AccessRequestRolePage = ({ route }) => {
 
     fetchAvailableDates();
   }, [isVerified, hospitalId]);
-
-  // Alert 관리 상태변수
-  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-
-  const navigation = useNavigation();
 
   const navigateToHome = () => {
     navigation.reset({
@@ -84,19 +80,23 @@ const AccessRequestRolePage = ({ route }) => {
   const handleSubmitButton = () => {
     // 날짜 선택 안 하고, 신청 버튼 클릭 시 alert 출력
     if (checkedDate.filter(Boolean).length === 0) {
-      setShowErrorAlert(true);
+      showNormalAlert({
+        title: '방문증 신청 불가',
+        message: `방문 일시 선택 후\n방문증을 신청해주세요.`,
+        confirmText: '확인',
+      });
     } else {
-      setShowConfirmAlert(true);
+      showNormalAlert({
+        title: '방문증 신청',
+        message: `입력하신 정보로\n방문증을 신청하시겠습니까?`,
+        showCancel: true,
+        onConfirmHandler: handleConfirmChange,
+      });
     }
   };
 
   // 방문증 신청 확인 버튼 클릭 핸들러
   const handleConfirmChange = async () => {
-    setShowConfirmAlert(false);
-    setTimeout(() => {
-      setShowSuccessAlert(true);
-    }, 300); // 300ms 정도 텀을 둠 (ios는 모달이 닫히자 마자 열리게 하면)
-
     try {
       setLoading(true);
 
@@ -113,20 +113,20 @@ const AccessRequestRolePage = ({ route }) => {
       };
 
       await createAccessPass(form);
-      setShowSuccessAlert(true);
+      showNormalAlert({
+        title: '방문증 신청 완료',
+        message: `방문증 신청을 완료하였습니다.\n메인 페이지로 이동합니다.`,
+        onConfirmHandler: navigateToHome,
+      });
     } catch (error) {
-      setShowErrorAlert(true);
+      showNormalAlert({
+        title: '방문증 신청 실패',
+        message: '방문증 신청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+        confirmText: '확인',
+      });
     } finally {
       setLoading(false);
     }
-  };
-
-  // 방문증 신청 성공 핸들러
-  const handleSuccessConfirm = () => {
-    setShowSuccessAlert(false);
-
-    // 메인 페이지로 이동되도록 설정
-    navigateToHome();
   };
 
   return (
@@ -177,32 +177,6 @@ const AccessRequestRolePage = ({ route }) => {
           )}
         </View>
       </KeyboardAwareScrollView>
-
-      {/* 방문 일시 선택 누락 시 알림 */}
-      <NormalAlert
-        show={showErrorAlert}
-        title="방문증 신청 불가"
-        message={`방문 일시 선택 후\n방문증을 신청해주세요.`}
-        onConfirmHandler={() => setShowErrorAlert(false)}
-      />
-
-      {/* 방문증 신청 확인 알림 */}
-      <NormalAlert
-        show={showConfirmAlert}
-        title="방문증 신청"
-        message={`입력하신 정보로\n방문증을 신청하시겠습니까?`}
-        showCancel={true}
-        onConfirmHandler={handleConfirmChange}
-        onCancelHandler={() => setShowConfirmAlert(false)}
-      />
-
-      {/* 신청 성공 알림 */}
-      <NormalAlert
-        show={showSuccessAlert}
-        title="방문증 신청 완료"
-        message={`방문증 신청을 완료하였습니다.\n메인 페이지로 이동합니다.`}
-        onConfirmHandler={handleSuccessConfirm}
-      />
     </>
   );
 };

@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useNormalAlertStore } from '../stores/alertStore';
 //import { dummyVerifyUser } from '../mocks/dummyVerifyUser';
 import { styles } from './styles/SignUpPage.styles';
-import NormalAlert from '../components/alerts/NormalAlert';
 import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
 import NormalButton from '../components/buttons/NormalButton';
@@ -52,8 +52,12 @@ const SignUpVerificationPage = () => {
   const [isRRNFocused, setIsRRNFocused] = useState(false); //주민등록번호 포커스 여부
   const [error, setError] = useState({}); // 에러 메시지
 
-  // Alert 관리 상태변수
-  const [showFailAlert, setShowFailAlert] = useState(false);
+  const navigation = useNavigation();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
+  const navigateToLogin = () => {
+    navigation.navigate('LoginPage');
+  };
 
   //공통 핸들러 - 입력값 변경을 처리
   const handleInputChange = (field, value) => {
@@ -110,12 +114,19 @@ const SignUpVerificationPage = () => {
           phone: form.phone,
         });
       } else {
-        // alert 띄우도록 상태변수 변경
-        setShowFailAlert(true);
+        showNormalAlert({
+          title: '인증 실패',
+          message: '입력 정보가 유효하지 않습니다.\n확인 후 다시 시도해 주세요.',
+        });
       }
     } catch (error) {
+      showNormalAlert({
+        title: '오류',
+        message: '개인정보 인증 중 오류가 발생했습니다.',
+      });
+
       //서버에서 내려주는 에러 메시지 처리
-      console.error('개인정보 인증 실패:', error);
+      //console.error('개인정보 인증 실패:', error);
       //에러 처리 로직 추가 (ex. 에러 메시지 표시)
       /*
       if (error.response && error.response.data && error.response.data.message) {
@@ -125,13 +136,6 @@ const SignUpVerificationPage = () => {
       }
       */
     }
-  };
-
-  const navigation = useNavigation();
-
-  const navigateToLogin = () => {
-    //로그인 페이지로 이동하는 함수
-    navigation.navigate('LoginPage');
   };
 
   return (
@@ -178,14 +182,6 @@ const SignUpVerificationPage = () => {
         <GrayButton title="로그인 하러 가기" onPressHandler={navigateToLogin} />
         <View style={styles.gongback}></View>
       </KeyboardAwareScrollView>
-
-      <NormalAlert
-        show={showFailAlert}
-        title="인증 실패"
-        message={`정보가 일치하지 않습니다.\n다시 시도해주세요`}
-        confirmText="다시 입력"
-        onConfirmHandler={() => setShowFailAlert(false)}
-      />
     </>
   );
 };
