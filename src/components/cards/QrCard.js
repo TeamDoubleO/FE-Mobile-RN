@@ -7,6 +7,7 @@ import { styles } from './styles/QrCard.styles';
 import { colors } from '../../constants/colors';
 import NormalButton from '../../components/buttons/NormalButton';
 import { qrData_sample } from '../../mocks/mockQRData';
+import ExpiryTimer from '../loadings/CircleTimer';
 
 // hasAccessAuthority: 출입 권한 여부, userVC : VC에 담을 사용자 정보, qrData : QR에 담을 JSON 문자열
 const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, expireDate }) => {
@@ -40,6 +41,9 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
     );
   }
 
+  // 타이머 뷰(앞/뒷면 모두에서 사용)
+  // const TimerView = <ExpiryTimer duration={5} />;
+
   return (
     <CardFlip style={styles.shadowWrapperContainer} ref={cardFlipRef} flipDirection="y">
       {/* 앞면 */}
@@ -60,6 +64,7 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
             showsVerticalScrollIndicator={false}
           >
             <Text style={styles.qrTitle}>임시 출입 QR</Text>
+            {/* <View>{TimerView}</View> */}
             <QRCode
               value={qrData}
               // value={qrData_sample}
@@ -87,6 +92,7 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
             source={require('../../assets/images/mainBackground.png')}
             resizeMode="contain" // 이미지 비율 유지
           />
+          {/* <View>{TimerView}</View> */}
           <View style={styles.qrFullWrapper}>
             <QRCode
               value={qrData}

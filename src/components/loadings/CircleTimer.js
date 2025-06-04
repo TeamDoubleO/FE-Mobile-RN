@@ -4,7 +4,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { styles } from './styles/CircleTimer.styles';
 import { colors } from '../../constants/colors';
 
-const RADIUS = 50;
+const RADIUS = 25;
 const STROKE_WIDTH = 5;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
@@ -64,11 +64,11 @@ const ExpiryTimer = ({
     <View style={styles.row}>
       <View style={styles.container}>
         <View style={styles.svgWrapper}>
-          <Svg width={120} height={120}>
+          <Svg width={60} height={60}>
             {/* 배경 원 */}
             <Circle
-              cx="60"
-              cy="60"
+              cx="30"
+              cy="30"
               r={RADIUS}
               stroke={colors.moreLightGray}
               strokeWidth={STROKE_WIDTH}
@@ -76,8 +76,8 @@ const ExpiryTimer = ({
             />
             {/* 진행 게이지 */}
             <AnimatedCircle
-              cx="60"
-              cy="60"
+              cx="30"
+              cy="30"
               r={RADIUS}
               stroke={status === 'valid' ? colors.primary : colors.lightGreen}
               strokeWidth={STROKE_WIDTH}
@@ -86,7 +86,7 @@ const ExpiryTimer = ({
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
               rotation="-90"
-              origin="60,60"
+              origin="30,30"
             />
           </Svg>
           <View style={styles.centerText}>
