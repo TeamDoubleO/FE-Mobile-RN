@@ -8,10 +8,24 @@ import {
   getInitialNotification,
 } from '@react-native-firebase/messaging';
 import { getApp } from '@react-native-firebase/app';
-import { navigationRef } from './src/navigations/NavigationRef';
+import { navigationRef, isReadyRef } from './src/navigations/NavigationRef';
 import { useNormalAlertStore } from './src/stores/alertStore';
 import AppNavigator from './src/navigations/AppNavigator';
 import NormalAlert from './src/components/alerts/NormalAlert';
+
+function moveToNotice() {
+  if (isReadyRef.current) {
+    navigationRef.current?.navigate('NoticeStack');
+  } else {
+    // 네비게이터가 준비될 때까지 폴링
+    const interval = setInterval(() => {
+      if (isReadyRef.current) {
+        navigationRef.current?.navigate('NoticeStack');
+        clearInterval(interval);
+      }
+    }, 100);
+  }
+}
 
 const App = () => {
   // zustand의 상태와 show 함수 한 번에 가져오기
@@ -46,21 +60,18 @@ const App = () => {
         title: remoteMessage.notification?.title || '알림',
         message: remoteMessage.notification?.body || '메시지 도착',
         confirmText: '이동',
-        onConfirmHandler: () => navigationRef.current?.navigate('NoticeStack'),
+        onConfirmHandler: () => moveToNotice(),
       });
     });
 
     // 백그라운드/종료 상태에서 알림 클릭
     const unsubscribeOpened = onNotificationOpenedApp(messagingInstance, (remoteMessage) => {
-      navigationRef.current?.navigate('NoticeStack');
+      moveToNotice();
     });
 
     // 앱 완전 종료 후 알림 클릭
-    // TODO: 앱 종료 시, 로그인 상태 해제 문제 해결 후 재확인 필요
     getInitialNotification(messagingInstance).then((remoteMessage) => {
-      if (remoteMessage) {
-        navigationRef.current?.navigate('NoticeStack');
-      }
+      if (remoteMessage) moveToNotice();
     });
 
     return () => {

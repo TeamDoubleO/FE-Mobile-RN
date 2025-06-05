@@ -8,7 +8,7 @@ const GrayButton = ({
 }) => {
   return (
     <TouchableOpacity onPress={onPressHandler} style={styles.button}>
-      <Text style={(styles.text, style)}>{title}</Text>
+      <Text style={[styles.text, style]}>{title}</Text>
     </TouchableOpacity>
   );
 };

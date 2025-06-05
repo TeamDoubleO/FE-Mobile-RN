@@ -46,7 +46,7 @@ const MyAccessListPage = () => {
       setLoading(true);
       try {
         const data = await getAccessList();
-        console.log(data);
+        //console.log(data);
         setMyAccessList(data);
       } catch (error) {
         console.error('출입증 목록 불러오기 실패: ', error);

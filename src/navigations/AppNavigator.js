@@ -8,7 +8,7 @@ import { getMyInfo } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
 import { useModalStore } from '../stores/modalStore';
 import { colors } from '../constants/colors';
-import { navigationRef } from './NavigationRef';
+import { navigationRef, isReadyRef } from './NavigationRef';
 import LoadingOverlay from '../components/loadings/LoadingOverlay';
 import PasswordConfirmModal from '../components/modals/PasswordConfirmModal';
 import AnimatedTabBar from './AnimatedTabBar';
@@ -159,6 +159,9 @@ export default function AppNavigator() {
   return (
     <NavigationContainer
       ref={navigationRef}
+      onReady={() => {
+        isReadyRef.current = true;
+      }}
       onStateChange={() => {
         const route = navigationRef.current?.getCurrentRoute();
         setCurrentRouteName(route?.name);

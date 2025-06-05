@@ -4,9 +4,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getNoticeList, deleteAllNotice } from '../apis/NoticeListApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
+import { styles } from './styles/NoticeListPage.styles';
 import NoticeList from '../components/notices/NoticeList';
 import GrayButton from '../components/buttons/GrayButton';
-import { styles } from './styles/NoticeListPage.styles';
 
 const titleTypeMap = {
   '보호자 신청 승인': 'APPROVE',
