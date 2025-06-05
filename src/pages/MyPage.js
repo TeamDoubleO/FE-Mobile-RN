@@ -112,9 +112,9 @@ export default function MyPage() {
   };
 
   return (
-    <View>
+    <ScrollView>
       <WaveHeader />
-      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
         <Text style={styles.title}>마이 페이지</Text>
         <NormalInput
           placeholder={`이름: ${userInfo.name}`}
@@ -143,7 +143,7 @@ export default function MyPage() {
           <Text style={styles.buttonDivider}>|</Text>
           <GrayButton title="회원 탈퇴" onPressHandler={handleDeleteUser} />
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
