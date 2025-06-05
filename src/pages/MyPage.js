@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { deleteUser, getMyInfo, logoutUser } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
@@ -95,6 +95,7 @@ export default function MyPage() {
       showNormalAlert({
         title: '회원 탈퇴 성공',
         message: '회원 탈퇴가 완료되었습니다.\n언제든 다시 찾아주세요:)',
+        showCancel: false,
         onConfirmHandler: async () => {
           clearAccessToken();
         },
@@ -103,6 +104,7 @@ export default function MyPage() {
       showNormalAlert({
         title: '회원 탈퇴 실패',
         message: '회원 탈퇴 중 오류가 발생했습니다.',
+        showCancel: false,
         confirmText: '확인',
       });
       console.log('회원 탈퇴 실패:', error);
@@ -112,7 +114,7 @@ export default function MyPage() {
   return (
     <View>
       <WaveHeader />
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>마이 페이지</Text>
         <NormalInput
           placeholder={`이름: ${userInfo.name}`}
@@ -141,7 +143,7 @@ export default function MyPage() {
           <Text style={styles.buttonDivider}>|</Text>
           <GrayButton title="회원 탈퇴" onPressHandler={handleDeleteUser} />
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }

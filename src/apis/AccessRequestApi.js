@@ -48,7 +48,6 @@ export const getAvailableDates = async (hospitalId) => {
 
 // 출입증 신청
 export const createAccessPass = async (form) => {
-  console.error('form: ', form);
   const response = await axios.post(
     '/passes',
     {

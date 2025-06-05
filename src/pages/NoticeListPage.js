@@ -3,9 +3,9 @@ import { View } from 'react-native';
 import { getNoticeList, deleteAllNotice } from '../apis/NoticeListApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
+import { styles } from './styles/NoticeListPage.styles';
 import NoticeList from '../components/notices/NoticeList';
 import GrayButton from '../components/buttons/GrayButton';
-import { styles } from './styles/NoticeListPage.styles';
 
 const alertData = [
   {
@@ -50,26 +50,26 @@ export default function NoticeListPage() {
   const [noticeList, setNoticeList] = useState([]);
 
   // 알림 목록 조회 api 사용시
-  // useEffect(() => {
-  //   const getNotice = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const data = await getNoticeList();
-  //       console.log(data);
-  //       setNoticeList(convertToOldFormat(data));
-  //     } catch (error) {
-  //       console.error('알림 목록 가져오기 실패:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   getNotice();
-  // }, [setLoading]);
+  useEffect(() => {
+    const getNotice = async () => {
+      setLoading(true);
+      try {
+        const data = await getNoticeList();
+        //console.log(data);
+        setNoticeList(convertToOldFormat(data));
+      } catch (error) {
+        console.error('알림 목록 가져오기 실패:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getNotice();
+  }, [setLoading]);
 
   // 목업 데이터 사용시
-  useEffect(() => {
-    setNoticeList(convertToOldFormat(alertData));
-  }, []);
+  // useEffect(() => {
+  //   setNoticeList(convertToOldFormat(alertData));
+  // }, []);
 
   // 회원 탈퇴 버튼 클릭 핸들러
   const handleDeleteAllNotice = () => {

@@ -115,12 +115,14 @@ const AccessRequestRolePage = ({ route }) => {
       showNormalAlert({
         title: '방문증 신청 완료',
         message: `방문증 신청을 완료하였습니다.\n메인 페이지로 이동합니다.`,
+        showCancel: false,
         onConfirmHandler: navigateToHome,
       });
     } catch (error) {
       showNormalAlert({
         title: '방문증 신청 실패',
         message: '방문증 신청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+        showCancel: false,
       });
     } finally {
       setLoading(false);
