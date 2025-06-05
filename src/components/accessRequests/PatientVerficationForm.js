@@ -3,19 +3,17 @@ import { View, Text } from 'react-native';
 import { verifyPatientInfo } from '../../apis/AccessRequestApi';
 import { getMyInfo } from '../../apis/MyPageApi';
 import { useAuthStore } from '../../stores/authStore';
+import { useNormalAlertStore } from '../../stores/alertStore';
 import { styles } from './styles/PatientVerficationForm.styles';
 import NormalButton from '../buttons/NormalButton';
 import NormalInput from '../textinputs/NormalInput';
-import NormalAlert from '../alerts/NormalAlert';
 
 const PatientVerficationForm = ({ hospitalId, onVerifiedHandler }) => {
   const { setLoading } = useAuthStore();
   const [userInfo, setUserInfo] = useState({ name: '', birth: '', contact: '' }); // 회원 정보 관리
   const [isVerified, setIsVerified] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
 
-  // Alert 관리 상태변수
-  const [showVerifyAlert, setShowVerifiedAlert] = useState(false);
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   // 사용자 정보 불러오기
   useEffect(() => {
@@ -45,14 +43,23 @@ const PatientVerficationForm = ({ hospitalId, onVerifiedHandler }) => {
 
       // 유효한 환자 정보
       setIsVerified(true);
-      setAlertMessage(`정보가 정상적으로 확인되었습니다.\n방문 날짜를 선택해 주세요.`);
-      onVerifiedHandler(userInfo); // 부모에게 환자 정보 전달
-      setShowVerifiedAlert(true);
+      showNormalAlert({
+        title: '환자 정보 검증 성공',
+        message: '정보가 정상적으로 확인되었습니다.\n방문 날짜를 선택해 주세요.',
+        confirmText: '확인',
+        onConfirmHandler: () => {
+          onVerifiedHandler(userInfo); // 부모에게 환자 정보 전달
+        },
+      });
     } catch (error) {
       // 유효하지 않은 환자 정보
       setIsVerified(false);
-      setAlertMessage(`일치하는 환자 정보가\n존재하지 않습니다.\n해당 병원에 문의해 주세요.`);
-      setShowVerifiedAlert(true);
+      showNormalAlert({
+        title: '환자 정보 검증 실패',
+        message: '일치하는 환자 정보가\n존재하지 않습니다.\n해당 병원에 문의해 주세요.',
+        showCancel: false,
+        confirmText: '확인',
+      });
     } finally {
       setLoading(false);
     }
@@ -72,15 +79,6 @@ const PatientVerficationForm = ({ hospitalId, onVerifiedHandler }) => {
           style={styles.verifyButton}
         />
       )}
-
-      {/* 검증 성공/실패 알림 */}
-      <NormalAlert
-        show={showVerifyAlert}
-        title={isVerified ? '환자 정보 검증 성공' : '환자 정보 검증 실패'}
-        message={alertMessage}
-        confirmText={isVerified ? '확인' : '다시 입력'}
-        onConfirmHandler={() => setShowVerifiedAlert(false)}
-      />
     </View>
   );
 };

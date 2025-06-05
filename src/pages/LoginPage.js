@@ -6,25 +6,31 @@ import { getMessaging, getToken } from '@react-native-firebase/messaging';
 import { getApp } from '@react-native-firebase/app';
 import { loginUser } from '../apis/LoginApi';
 import { useAuthStore } from '../stores/authStore';
+import { useNormalAlertStore } from '../stores/alertStore';
 import { styles } from './styles/LoginPage.styles';
 import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
 import NormalButton from '../components/buttons/NormalButton';
 import GrayButton from '../components/buttons/GrayButton';
-import NormalAlert from '../components/alerts/NormalAlert';
 
 const LoginPage = () => {
   const { setIsLoggedIn, setLoading, setOnlyAccessToken } = useAuthStore();
-  //상태 변수
+
   const [form, setForm] = useState({
     email: '', // 이메일
     pw: '', // 비밀번호
     fcmToken: '', // FCM 토큰
   });
 
-  // Alert 관리 상태변수
-  const [showAlert, setShowAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [error, setError] = useState({}); // 에러 메시지
+  const [isPwValid, setIsPwValid] = useState(false); //비밀번호 유효성
+
+  const navigation = useNavigation();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
+  const navigateToSignUp = () => {
+    navigation.navigate('SignUpVerificationPage');
+  };
 
   //이메일 형식 검증 함수
   const isValidEmail = (email) => {
@@ -34,9 +40,6 @@ const LoginPage = () => {
   // 비밀번호 규칙 검사 (8자 이상, 영문/숫자/특수문자 포함)
   const isValidPassword = (pw) =>
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/.test(pw);
-
-  const [error, setError] = useState({}); // 에러 메시지
-  const [isPwValid, setIsPwValid] = useState(false); //비밀번호 유효성
 
   const handleInputChange = (field, value) => {
     // field : 바꿀 필드의 이름 (ex. name), value : 입력된 새로운 값
@@ -83,29 +86,29 @@ const LoginPage = () => {
       //토큰 있어야만 저장하도록함
       if (data && data.data.accessToken) {
         setOnlyAccessToken(data.data.accessToken);
-        setShowAlert(true);
+        showNormalAlert({
+          title: '로그인 성공',
+          message: `로그인에 성공하였습니다.\n메인 페이지로 이동합니다.`,
+          onConfirmHandler: () => {
+            setIsLoggedIn(true);
+          },
+        });
       } else {
-        setShowErrorAlert(true);
+        showNormalAlert({
+          title: '로그인 실패',
+          message: `로그인에 실패했습니다.\n다시 시도해주세요.`,
+          confirmText: '확인',
+        });
       }
     } catch (error) {
-      setShowErrorAlert(true);
+      showNormalAlert({
+        title: '로그인 실패',
+        message: `로그인에 실패했습니다.\n다시 시도해주세요.`,
+        confirmText: '확인',
+      });
     } finally {
       setLoading(false);
     }
-  };
-
-  // 로그인 성공 핸들러
-  const handleSuccess = () => {
-    setShowAlert(false);
-    // 메인 페이지로 이동되도록 로그인 상태 설정
-    setIsLoggedIn(true);
-  };
-
-  const navigation = useNavigation();
-
-  const navigateToSignUp = () => {
-    // 회원가입 페이지로 이동하는 함수
-    navigation.navigate('SignUpVerificationPage');
   };
 
   return (
@@ -142,18 +145,6 @@ const LoginPage = () => {
         <GrayButton title="계정 만들기" onPressHandler={navigateToSignUp} />
         <View style={styles.gongback}></View>
       </KeyboardAwareScrollView>
-      <NormalAlert
-        show={showAlert}
-        title="로그인 성공"
-        message={`로그인에 성공하였습니다.\n메인 페이지로 이동합니다.`}
-        onConfirmHandler={handleSuccess}
-      />
-      <NormalAlert
-        show={showErrorAlert}
-        title="로그인 실패"
-        message={`로그인에 실패했습니다.\n다시 시도해주세요.`}
-        onConfirmHandler={() => setShowErrorAlert(false)}
-      />
     </>
   );
 };

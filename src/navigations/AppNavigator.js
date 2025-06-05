@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import { getMyInfo } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
 import { useModalStore } from '../stores/modalStore';
 import { colors } from '../constants/colors';
-import { fonts } from '../constants/fonts';
+import { navigationRef } from './NavigationRef';
 import LoadingOverlay from '../components/loadings/LoadingOverlay';
 import PasswordConfirmModal from '../components/modals/PasswordConfirmModal';
 import AnimatedTabBar from './AnimatedTabBar';
@@ -29,14 +29,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // StatusBar 스타일 설정
-const WHITE_TAB_SCREENS = ['MainPage', 'AlertStack', 'WelcomePage'];
-const GREEN_TAB_SCREENS = [
-  'AccessStack',
-  'MyPageStack',
-  'LoginPage',
-  'SignUpPage',
-  'SignUpVerificationPage',
-];
+const WHITE_TAB_SCREENS = ['MainPage', 'WelcomePage'];
 
 // Stack 네비게이터 옵션
 const screenOptions = {
@@ -93,7 +86,7 @@ function AccessStack() {
 }
 
 // 알림 스택 네비게이터
-function AlertStack() {
+function NoticeStack() {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen name="NoticeListPage" component={NoticeListPage} options={{ title: '알림' }} />
@@ -110,16 +103,17 @@ export default function AppNavigator() {
     loading,
     setAccessToken,
     clearAccessToken,
+    _hasHydrated, // hydration flag
   } = useAuthStore();
+
   const showPasswordModal = useModalStore((state) => state.showPasswordModal);
 
-  // 네비게이션 객체에 직접 접근하기 위한 ref
-  const navigationRef = useRef();
   // 현재 라우트 이름을 저장하는 state
   const [currentRouteName, setCurrentRouteName] = useState('WelcomePage');
 
   // useEffect: 앱 시작 시 토큰 유효성 확인
   useEffect(() => {
+    if (!_hasHydrated) return;
     const checkToken = async () => {
       setLoading(true);
       try {
@@ -141,7 +135,7 @@ export default function AppNavigator() {
       }
     };
     checkToken();
-  }, []);
+  }, [_hasHydrated]);
 
   // 탭 클릭 시 비밀번호 모달 호출
   const handleTabPress = (e, tabName) => {
@@ -156,6 +150,11 @@ export default function AppNavigator() {
       background: colors.white,
     },
   };
+
+  // hydration이 끝날 때까지 아무것도 렌더하지 않음(혹은 Splash)
+  if (!_hasHydrated) {
+    return null;
+  }
 
   return (
     <NavigationContainer
@@ -182,8 +181,8 @@ export default function AppNavigator() {
           <Tab.Screen name="MainPage" component={MainPage} options={{ title: '홈' }} />
           <Tab.Screen name="AccessStack" component={AccessStack} options={{ title: '출입 권한' }} />
           <Tab.Screen
-            name="AlertStack"
-            component={AlertStack}
+            name="NoticeStack"
+            component={NoticeStack}
             options={{ title: '알림', tabBarBadge: 2 }}
           />
           <Tab.Screen

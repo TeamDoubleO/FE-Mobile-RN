@@ -4,6 +4,14 @@ import NoticeItem from './NoticeItem';
 import { styles } from './styles/NoticeList.styles';
 
 export default function NoticeList({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>알림이 없습니다.</Text>
+      </View>
+    );
+  }
+
   // 날짜별로 그룹핑
   const grouped = data.reduce((acc, item) => {
     acc[item.date] = acc[item.date] || [];
