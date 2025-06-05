@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { View, Image } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { getAccessList } from '../apis/MyAccessListApi';
 import { getHospitalList } from '../apis/AccessRequestApi';
 import { getMyInfo } from '../apis/MyPageApi';
@@ -76,27 +76,29 @@ const MainPage = () => {
       : 0;
 
   // 병원, 출입증 데이터 불러오기
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        // 병원, 유저 정보 병렬로 불러오기
-        const [hospitalList, myInfo] = await Promise.all([getHospitalList(), getMyInfo()]);
-        setHospitalNameList(hospitalList);
-        setUserName(myInfo.name);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          // 병원, 유저 정보 병렬로 불러오기
+          const [hospitalList, myInfo] = await Promise.all([getHospitalList(), getMyInfo()]);
+          setHospitalNameList(hospitalList);
+          setUserName(myInfo.name);
 
-        // 출입증 목록 불러오기 TODO : 여기도 로딩이나 어싱크 처리 필요
-        // getAccessList().then(setMyAccessList);
-        // 목업 출입증 데이터 불러오기
-        setMyAccessList(mockAccessList);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+          // 출입증 목록 불러오기 TODO : 여기도 로딩이나 어싱크 처리 필요
+          getAccessList().then(setMyAccessList);
+          // 목업 출입증 데이터 불러오기
+          // setMyAccessList(mockAccessList);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }, [setLoading]),
+  );
 
   // hospitalNameList, myAccessList 준비되면 userVC 생성
   useEffect(() => {
