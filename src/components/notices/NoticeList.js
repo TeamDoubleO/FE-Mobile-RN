@@ -19,19 +19,25 @@ export default function NoticeList({ data }) {
     return acc;
   }, {});
 
+  // 날짜 역순 정렬
+  const sortedDates = Object.keys(grouped).sort((a, b) => (a < b ? 1 : -1));
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 60 }}>
-      {Object.keys(grouped).map((date) => (
+      {sortedDates.map((date) => (
         <View key={date}>
           <Text style={styles.dateText}>{date}</Text>
-          {grouped[date].map((alert) => (
-            <NoticeItem
-              key={alert.id}
-              type={alert.type}
-              time={alert.time}
-              message={alert.message}
-            />
-          ))}
+          {grouped[date]
+            .slice()
+            .reverse()
+            .map((alert) => (
+              <NoticeItem
+                key={alert.id}
+                type={alert.type}
+                time={alert.time}
+                message={alert.message}
+              />
+            ))}
         </View>
       ))}
     </ScrollView>
