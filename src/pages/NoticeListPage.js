@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { useState, useCallback } from 'react';
+import { View, RefreshControl } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getNoticeList, deleteAllNotice } from '../apis/NoticeListApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
@@ -30,25 +31,34 @@ export default function NoticeListPage() {
   const { setLoading } = useAuthStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
   const [noticeList, setNoticeList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // 알림 목록 조회 api 사용시
-  useEffect(() => {
-    const getNotice = async () => {
-      setLoading(true);
-      try {
-        const data = await getNoticeList();
-        console.log(data);
-        setNoticeList(convertToOldFormat(data));
-      } catch (error) {
-        console.error('알림 목록 가져오기 실패:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getNotice();
-  }, [setLoading]);
+  // 알림 전체 삭제
+  const getNotices = async () => {
+    setLoading(true);
+    try {
+      const data = await getNoticeList();
+      setNoticeList(convertToOldFormat(data));
+    } catch (error) {
+      console.error('알림 목록 가져오기 실패:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // 회원 탈퇴 버튼 클릭 핸들러
+  useFocusEffect(
+    useCallback(() => {
+      getNotices();
+    }, []),
+  );
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getNotices();
+    setRefreshing(false);
+  };
+
+  // 알림 전체 삭제 핸들러
   const handleDeleteAllNotice = () => {
     showNormalAlert({
       title: '알림 전체 삭제 ',
@@ -86,7 +96,10 @@ export default function NoticeListPage() {
           style={styles.text}
         />
       </View>
-      <NoticeList data={noticeList} />
+      <NoticeList
+        data={noticeList}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      />
     </View>
   );
 }

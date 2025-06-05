@@ -4,7 +4,7 @@ import { fonts } from '../../../constants/fonts';
 
 export const styles = StyleSheet.create({
   container: {
-    paddingBottom: 30,
+    paddingBottom: 90,
     paddingHorizontal: 10,
   },
   dateText: {

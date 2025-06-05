@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from 'react-native';
 import NoticeItem from './NoticeItem';
 import { styles } from './styles/NoticeList.styles';
 
-export default function NoticeList({ data }) {
+export default function NoticeList({ data, refreshControl }) {
   if (!data || data.length === 0) {
     return (
       <View style={styles.emptyContainer}>
@@ -23,7 +23,7 @@ export default function NoticeList({ data }) {
   const sortedDates = Object.keys(grouped).sort((a, b) => (a < b ? 1 : -1));
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 60 }}>
+    <ScrollView style={styles.container} refreshControl={refreshControl}>
       {sortedDates.map((date) => (
         <View key={date}>
           <Text style={styles.dateText}>{date}</Text>
