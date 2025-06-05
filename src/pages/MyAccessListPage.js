@@ -19,6 +19,7 @@ const MyAccessListPage = () => {
   const { setLoading } = useAuthStore();
   const [myAccessList, setMyAccessList] = useState([]);
   const [hospitalNameList, setHospitalNameList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Alert 관리 상태변수
   const [showModal, setShowModal] = useState(false); // 모달 표시 여부
@@ -56,6 +57,19 @@ const MyAccessListPage = () => {
     };
     getMyAccessList();
   }, [setLoading]);
+
+  //새로고침 함수
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const data = await getAccessList();
+      setMyAccessList(data);
+    } catch (error) {
+      console.error('출입증 목록 새로고침 실패: ', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   // 출입 권한 클릭 시 모달 띄우기
   const handleItemPress = (section, item, index) => {
@@ -154,6 +168,8 @@ const MyAccessListPage = () => {
             accessList: section.accessList.map((item) => ({ data: item })),
           }))}
           onItemPress={handleItemPress}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
           renderItem={(itemObj, idx, selected) => {
             const item = itemObj.data;
             return (
