@@ -8,7 +8,7 @@ import { getMyInfo } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
 import { useModalStore } from '../stores/modalStore';
 import { colors } from '../constants/colors';
-import { navigationRef } from './NavigationRef';
+import { navigationRef, isReadyRef } from './NavigationRef';
 import LoadingOverlay from '../components/loadings/LoadingOverlay';
 import PasswordConfirmModal from '../components/modals/PasswordConfirmModal';
 import AnimatedTabBar from './AnimatedTabBar';
@@ -103,7 +103,9 @@ export default function AppNavigator() {
     loading,
     setAccessToken,
     clearAccessToken,
+    _hasHydrated, // hydration flag
   } = useAuthStore();
+
   const showPasswordModal = useModalStore((state) => state.showPasswordModal);
 
   // 현재 라우트 이름을 저장하는 state
@@ -111,6 +113,7 @@ export default function AppNavigator() {
 
   // useEffect: 앱 시작 시 토큰 유효성 확인
   useEffect(() => {
+    if (!_hasHydrated) return;
     const checkToken = async () => {
       setLoading(true);
       try {
@@ -132,7 +135,7 @@ export default function AppNavigator() {
       }
     };
     checkToken();
-  }, []);
+  }, [_hasHydrated]);
 
   // 탭 클릭 시 비밀번호 모달 호출
   const handleTabPress = (e, tabName) => {
@@ -148,9 +151,17 @@ export default function AppNavigator() {
     },
   };
 
+  // hydration이 끝날 때까지 아무것도 렌더하지 않음(혹은 Splash)
+  if (!_hasHydrated) {
+    return null;
+  }
+
   return (
     <NavigationContainer
       ref={navigationRef}
+      onReady={() => {
+        isReadyRef.current = true;
+      }}
       onStateChange={() => {
         const route = navigationRef.current?.getCurrentRoute();
         setCurrentRouteName(route?.name);

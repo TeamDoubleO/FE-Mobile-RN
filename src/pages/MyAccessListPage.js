@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { getAccessList } from '../apis/MyAccessListApi';
 import { getHospitalList } from '../apis/AccessRequestApi';
 import { useAuthStore } from '../stores/authStore';
-import { mockAccessList } from '../mocks/mockAccessList';
 import { styles } from './styles/MyAccessListPage.styles';
 import MyAccessDetailModal from '../components/modals/MyAccessDetailModal';
 import NormalListDeep from '../components/lists/NormalListDeep';
@@ -42,34 +41,30 @@ const MyAccessListPage = () => {
   }, [setLoading]);
 
   // 출입증 목록 불러오기
-  // useEffect(() => {
-  //   const getMyAccessList = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const data = await getAccessList();
-  //       console.log(data);
-  //       setMyAccessList(data);
-  //     } catch (error) {
-  //       console.error('출입증 목록 불러오기 실패: ', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   getMyAccessList();
-  // }, [setLoading]);
-
-  // 임시 데이터 적용
   useEffect(() => {
-    setMyAccessList(mockAccessList);
-  }, []);
+    const getMyAccessList = async () => {
+      setLoading(true);
+      try {
+        const data = await getAccessList();
+        //console.log(data);
+        setMyAccessList(data);
+      } catch (error) {
+        console.error('출입증 목록 불러오기 실패: ', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getMyAccessList();
+  }, [setLoading]);
 
   // 출입 권한 클릭 시 모달 띄우기
   const handleItemPress = (section, item, index) => {
     const access = item.data;
+    const isPatient = access.visitCategory === 'PATIENT';
+    const isGuardian = access.visitCategory === 'GUARDIAN';
 
     setSelectedAccess({
       hospitalName: section.contentTitle,
-      // area: (access.accessAreaNames || []).join(',\n'),
       area: (access.accessAreaNames || []).map((name) => `${name}`).join('\n'),
       visitorType: getVisitCategoryLabel(access.visitCategory),
       startDate: formatDateTime(access.startedAt),
@@ -78,6 +73,8 @@ const MyAccessListPage = () => {
       patientNumber: access.patientId,
       issuer: access.memberId,
       passId: access.passId,
+      guardians: isPatient ? access.guardians : undefined,
+      patientName: isGuardian ? access.patientName : undefined,
     });
 
     setShowModal(true);

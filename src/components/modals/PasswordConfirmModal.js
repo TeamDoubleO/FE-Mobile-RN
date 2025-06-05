@@ -47,7 +47,7 @@ const PasswordConfirmModal = ({ navigationRef }) => {
       navigationRef.current?.navigate(pendingTab);
       hidePasswordModal();
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       setErrorText('비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
     }
   };

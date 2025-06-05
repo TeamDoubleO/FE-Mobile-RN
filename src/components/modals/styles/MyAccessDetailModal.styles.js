@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignSelf: 'stretch',
-    marginVertical: '7%',
+    marginBottom: '7%',
   },
   button: {
     minWidth: 90,

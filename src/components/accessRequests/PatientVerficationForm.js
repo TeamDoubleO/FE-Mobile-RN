@@ -46,6 +46,7 @@ const PatientVerficationForm = ({ hospitalId, onVerifiedHandler }) => {
       showNormalAlert({
         title: '환자 정보 검증 성공',
         message: '정보가 정상적으로 확인되었습니다.\n방문 날짜를 선택해 주세요.',
+        showCancel: false,
         confirmText: '확인',
         onConfirmHandler: () => {
           onVerifiedHandler(userInfo); // 부모에게 환자 정보 전달

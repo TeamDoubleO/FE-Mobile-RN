@@ -79,17 +79,16 @@ const AccessRequestRolePage = ({ route }) => {
   // 방문증 신청 버튼 클릭 핸들러
   const handleSubmitButton = () => {
     // 날짜 선택 안 하고, 신청 버튼 클릭 시 alert 출력
-    if (checkedDate.filter(Boolean).length === 0) {
+    if (!checkedDate.some(Boolean)) {
       showNormalAlert({
         title: '방문증 신청 불가',
         message: `방문 일시 선택 후\n방문증을 신청해주세요.`,
-        confirmText: '확인',
+        showCancel: false,
       });
     } else {
       showNormalAlert({
         title: '방문증 신청',
         message: `입력하신 정보로\n방문증을 신청하시겠습니까?`,
-        showCancel: true,
         onConfirmHandler: handleConfirmChange,
       });
     }
@@ -116,13 +115,14 @@ const AccessRequestRolePage = ({ route }) => {
       showNormalAlert({
         title: '방문증 신청 완료',
         message: `방문증 신청을 완료하였습니다.\n메인 페이지로 이동합니다.`,
+        showCancel: false,
         onConfirmHandler: navigateToHome,
       });
     } catch (error) {
       showNormalAlert({
         title: '방문증 신청 실패',
         message: '방문증 신청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
-        confirmText: '확인',
+        showCancel: false,
       });
     } finally {
       setLoading(false);
