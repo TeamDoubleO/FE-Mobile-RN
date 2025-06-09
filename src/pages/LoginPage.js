@@ -90,7 +90,6 @@ const LoginPage = () => {
         setOnlyAccessToken(data.data.accessToken);
         const userData = await getMyInfo();
         setUserInfo(userData);
-        console.error(userData);
         showNormalAlert({
           title: '로그인 성공',
           message: `로그인에 성공하였습니다.\n메인 페이지로 이동합니다.`,

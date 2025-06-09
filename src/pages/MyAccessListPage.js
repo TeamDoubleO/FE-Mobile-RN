@@ -4,6 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { getAccessList } from '../apis/MyAccessListApi';
 import { getHospitalList } from '../apis/AccessRequestApi';
 import { useAuthStore } from '../stores/authStore';
+import { useNormalAlertStore } from '../stores/alertStore';
+import { useHospitalStore } from '../stores/hospitalStore';
 import { styles } from './styles/MyAccessListPage.styles';
 import MyAccessDetailModal from '../components/modals/MyAccessDetailModal';
 import NormalListDeep from '../components/lists/NormalListDeep';
@@ -17,6 +19,8 @@ function getHospitalNameByList(hospitalId, hospitalNameList) {
 const MyAccessListPage = () => {
   const navigation = useNavigation();
   const { setLoading } = useAuthStore();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+  const hospitalList = useHospitalStore.getState().hospitalList;
   const [myAccessList, setMyAccessList] = useState([]);
   const [hospitalNameList, setHospitalNameList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -33,8 +37,7 @@ const MyAccessListPage = () => {
         const data = await getHospitalList();
         setHospitalNameList(data);
       } catch (error) {
-        console.error('병원 목록 불러오기 실패:', error);
-        // TODO: 저장된 병원 목록 불러오는 구문 추가
+        setHospitalNameList(hospitalList);
       } finally {
         setLoading(false);
       }
@@ -52,7 +55,7 @@ const MyAccessListPage = () => {
       } catch (error) {
         showNormalAlert({
           title: '출입증 목록 조회 실패',
-          message: `출입증 목록 조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+          message: `출입증 목록 조회 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
           showCancel: false,
           confirmText: '확인',
         });
@@ -72,7 +75,7 @@ const MyAccessListPage = () => {
     } catch (error) {
       showNormalAlert({
         title: '출입증 새로고침 실패',
-        message: `출입증 새로고침 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+        message: `출입증 새로고침 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
         showCancel: false,
         confirmText: '확인',
       });

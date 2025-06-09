@@ -122,13 +122,13 @@ export default function AppNavigator() {
           try {
             await getMyInfo();
             setAccessToken(accessToken); // 토큰 유효
-          } catch (err) {
+          } catch (error) {
             clearAccessToken();
           }
         } else {
           setIsLoggedIn(false);
         }
-      } catch (e) {
+      } catch (error) {
         setIsLoggedIn(false);
       } finally {
         setLoading(false);
