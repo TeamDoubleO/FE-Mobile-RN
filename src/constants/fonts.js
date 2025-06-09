@@ -1,15 +1,15 @@
 export const fonts = {
   largeTitle: {
     fontFamily: 'Pretendard-Medium',
-    fontSize: 26,
+    fontSize: 25,
   },
   mediumTitle: {
     fontFamily: 'Pretendard-Bold',
-    fontSize: 24,
+    fontSize: 23,
   },
   smallTitle: {
     fontFamily: 'Pretendard-Bold',
-    fontSize: 22,
+    fontSize: 21,
   },
   normalText: {
     fontFamily: 'Pretendard-Medium',
@@ -24,7 +24,7 @@ export const fonts = {
     fontSize: 17,
   },
   smallText: {
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: 'Pretendard-Medium',
     fontSize: 15,
   },
 };

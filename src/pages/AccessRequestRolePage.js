@@ -40,8 +40,8 @@ const AccessRequestRolePage = ({ route }) => {
         setAvailableDates(dates);
       } catch (error) {
         showNormalAlert({
-          title: '방문 가능 날짜 조회 실패',
-          message: `방문 가능 날짜 조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+          title: '방문 일시 조회 실패',
+          message: `방문 가능 일시 조회 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
           showCancel: false,
           confirmText: '확인',
         });

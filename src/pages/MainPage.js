@@ -6,6 +6,7 @@ import { getHospitalList } from '../apis/AccessRequestApi';
 import { getMyInfo } from '../apis/MyPageApi';
 import { mockAccessList } from '../mocks/mockAccessList';
 import { useAuthStore } from '../stores/authStore';
+import { useNormalAlertStore } from '../stores/alertStore';
 import { styles } from './styles/MainPage.styles';
 import QrCards from '../components/cards/QrCards';
 import NormalButton from '../components/buttons/NormalButton';
@@ -52,6 +53,7 @@ function isAccessible(startedAt, expiredAt) {
 
 const MainPage = () => {
   const { setLoading } = useAuthStore();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
   // 임시: 상태변수로 출입 권한 제어
   const [hasAccessAuthority, setHasAccessAuthority] = useState(true);
 
@@ -90,8 +92,13 @@ const MainPage = () => {
           getAccessList().then(setMyAccessList);
           // 목업 출입증 데이터 불러오기
           // setMyAccessList(mockAccessList);
-        } catch (e) {
-          console.error(e);
+        } catch (error) {
+          showNormalAlert({
+            title: '출입 QR 조회 실패',
+            message: `출입 QR 조회 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+            showCancel: false,
+            confirmText: '확인',
+          });
         } finally {
           setLoading(false);
         }

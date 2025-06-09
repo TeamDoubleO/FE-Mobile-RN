@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   modalContentTitle: {
-    ...fonts.largeText,
+    ...fonts.mediumText,
     color: colors.black,
     marginVertical: '5%',
     alignSelf: 'center',
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     marginTop: '5%',
   },
   modalText: {
-    ...fonts.mediumText,
+    ...fonts.smallText,
     color: colors.darkGray,
     marginTop: 2,
     lineHeight: 30,

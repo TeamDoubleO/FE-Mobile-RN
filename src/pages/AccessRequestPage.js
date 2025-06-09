@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import { getHospitalList } from '../apis/AccessRequestApi';
 import { useAuthStore } from '../stores/authStore';
-import { useNormalAlertStore } from '../stores/alertStore';
+import { useHospitalStore } from '../stores/hospitalStore';
 import { styles } from './styles/AccessRequestPage.styles';
 import NormalInput from '../components/textinputs/NormalInput';
 import NormalList from '../components/lists/NormalList';
@@ -12,7 +12,8 @@ const AccessRequestPage = () => {
   const [searchText, setSearchText] = useState('');
   const [hospitalName, setHospitalName] = useState([]);
 
-  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+  const setHospitalList = useHospitalStore.getState().setHospitalList;
+  const hospitalList = useHospitalStore.getState().hospitalList;
 
   // 병원 목록 불러오기
   useEffect(() => {
@@ -21,13 +22,10 @@ const AccessRequestPage = () => {
       try {
         const data = await getHospitalList();
         setHospitalName(data);
+        setHospitalList(data);
       } catch (error) {
-        showNormalAlert({
-          title: '병원 목록 조회 실패',
-          message: `병원 목록 조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
-          showCancel: false,
-          confirmText: '확인',
-        });
+        // 서버 오류 시, zustand 저장값 사용
+        setHospitalName(hospitalList);
       } finally {
         setLoading(false);
       }

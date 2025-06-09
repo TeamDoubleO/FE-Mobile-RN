@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   alertTitle: {
-    ...fonts.mediumTitle,
+    ...fonts.smallTitle,
     color: colors.black,
     marginBottom: 5,
   },
