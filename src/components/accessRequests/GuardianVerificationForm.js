@@ -36,6 +36,7 @@ const GuardianVerificationForm = ({ hospitalId, onVerifiedHandler }) => {
       showNormalAlert({
         title: '환자 번호 검증 실패',
         message: '일치하는 환자 정보가\n존재하지 않습니다.\n확인 후 다시 입력해 주세요.',
+        showCancel: false,
         confirmText: '다시 입력',
         onConfirmHandler: () => {
           setPatientCode('');

@@ -34,6 +34,7 @@ const MyAccessListPage = () => {
         setHospitalNameList(data);
       } catch (error) {
         console.error('병원 목록 불러오기 실패:', error);
+        // TODO: 저장된 병원 목록 불러오는 구문 추가
       } finally {
         setLoading(false);
       }
@@ -47,10 +48,14 @@ const MyAccessListPage = () => {
       setLoading(true);
       try {
         const data = await getAccessList();
-        //console.log(data);
         setMyAccessList(data);
       } catch (error) {
-        console.error('출입증 목록 불러오기 실패: ', error);
+        showNormalAlert({
+          title: '출입증 목록 조회 실패',
+          message: `출입증 목록 조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+          showCancel: false,
+          confirmText: '확인',
+        });
       } finally {
         setLoading(false);
       }
@@ -65,7 +70,12 @@ const MyAccessListPage = () => {
       const data = await getAccessList();
       setMyAccessList(data);
     } catch (error) {
-      console.error('출입증 목록 새로고침 실패: ', error);
+      showNormalAlert({
+        title: '출입증 새로고침 실패',
+        message: `출입증 새로고침 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+        showCancel: false,
+        confirmText: '확인',
+      });
     } finally {
       setRefreshing(false);
     }

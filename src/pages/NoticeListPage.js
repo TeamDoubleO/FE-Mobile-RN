@@ -73,17 +73,16 @@ export default function NoticeListPage() {
       setNoticeList([]);
       showNormalAlert({
         title: '알림 삭제 완료',
-        showCancel: false,
         message: '',
+        showCancel: false,
       });
     } catch (error) {
       showNormalAlert({
         title: '알림 삭제 실패',
-        message: '오류가 발생했습니다.\n다시 시도해 주세요',
+        message: `알림 삭제 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
         showCancel: false,
         confirmText: '확인',
       });
-      console.log('알림 삭제 실패:', error);
     }
   };
 

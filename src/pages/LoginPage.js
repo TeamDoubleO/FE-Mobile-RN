@@ -12,9 +12,10 @@ import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
 import NormalButton from '../components/buttons/NormalButton';
 import GrayButton from '../components/buttons/GrayButton';
+import { getMyInfo } from '../apis/MyPageApi';
 
 const LoginPage = () => {
-  const { setIsLoggedIn, setLoading, setOnlyAccessToken } = useAuthStore();
+  const { setIsLoggedIn, setLoading, setOnlyAccessToken, setUserInfo } = useAuthStore();
 
   const [form, setForm] = useState({
     email: '', // 이메일
@@ -83,12 +84,17 @@ const LoginPage = () => {
 
       //로그인 API 연결
       const data = await loginUser(newForm);
+
       //토큰 있어야만 저장하도록함
       if (data && data.data.accessToken) {
         setOnlyAccessToken(data.data.accessToken);
+        const userData = await getMyInfo();
+        setUserInfo(userData);
+        console.error(userData);
         showNormalAlert({
           title: '로그인 성공',
           message: `로그인에 성공하였습니다.\n메인 페이지로 이동합니다.`,
+          showCancel: false,
           onConfirmHandler: () => {
             setIsLoggedIn(true);
           },
@@ -96,14 +102,16 @@ const LoginPage = () => {
       } else {
         showNormalAlert({
           title: '로그인 실패',
-          message: `로그인에 실패했습니다.\n다시 시도해주세요.`,
+          message: `로그인에 실패했습니다.\n다시 시도해 주세요.`,
+          showCancel: false,
           confirmText: '확인',
         });
       }
     } catch (error) {
       showNormalAlert({
         title: '로그인 실패',
-        message: `로그인에 실패했습니다.\n다시 시도해주세요.`,
+        message: `로그인에 실패했습니다.\n다시 시도해 주세요.`,
+        showCancel: false,
         confirmText: '확인',
       });
     } finally {

@@ -48,7 +48,6 @@ const ChangePasswordPage = () => {
     showNormalAlert({
       title: '비밀번호 변경',
       message: '비밀번호를 변경하시겠습니까?',
-      showCancel: true,
       onConfirmHandler: handleConfirmChange,
     });
   };
@@ -63,15 +62,16 @@ const ChangePasswordPage = () => {
         showNormalAlert({
           title: '비밀번호 변경 완료',
           message: `비밀번호가 변경되었습니다.\n메인 페이지로 이동합니다.`,
+          showCancel: false,
           onConfirmHandler: navigateToHome,
         });
       }, 300);
     } catch (error) {
       const status = error.response.data.status;
-      let message = '비밀번호 변경에 실패했습니다.';
+      let message = `비밀번호 변경 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`;
 
       if (status === 400) {
-        message = '기존 비밀번호를 다시 입력해주세요.';
+        message = '기존 비밀번호를 다시 입력해 주세요.';
       } else if (status === 409) {
         message = `기존과 동일한 비밀번호는\n사용하실 수 없습니다.`;
       }
@@ -79,6 +79,7 @@ const ChangePasswordPage = () => {
       showNormalAlert({
         title: '비밀번호 변경 실패',
         message,
+        showCancel: false,
         confirmText: '확인',
       });
     } finally {
@@ -97,14 +98,14 @@ const ChangePasswordPage = () => {
         <WaveHeader />
         <View style={styles.container}>
           <Text style={styles.title}>비밀번호 변경</Text>
-          <Text style={styles.text}>새로운 비밀번호를 입력해주세요.</Text>
+          <Text style={styles.text}>새로운 비밀번호를 입력해 주세요.</Text>
           <NormalInput
             placeholder="기존 비밀번호"
             value={originalPassword}
             onChangeTextHandler={setOriginalPassword}
             errorText={
               isSubmitted && (!originalPassword || !isValidPassword(originalPassword))
-                ? '기존 비밀번호를 입력하고 형식을 확인해주세요'
+                ? '기존 비밀번호를 입력하고 형식을 확인해 주세요'
                 : ''
             }
             isSecureTextEntry={true}
@@ -116,7 +117,7 @@ const ChangePasswordPage = () => {
             onChangeTextHandler={setNewPassword}
             errorText={
               isSubmitted && (!newPassword || !isValidPassword(newPassword))
-                ? '새 비밀번호를 입력하고 형식을 확인해주세요'
+                ? '새 비밀번호를 입력하고 형식을 확인해 주세요'
                 : ''
             }
             isSecureTextEntry={true}

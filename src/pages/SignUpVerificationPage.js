@@ -116,25 +116,16 @@ const SignUpVerificationPage = () => {
       } else {
         showNormalAlert({
           title: '인증 실패',
-          message: '입력 정보가 유효하지 않습니다.\n확인 후 다시 시도해 주세요.',
+          message: `입력 정보가 유효하지 않습니다.\n확인 후 다시 시도해 주세요.`,
+          showCancel: false,
         });
       }
     } catch (error) {
       showNormalAlert({
-        title: '오류',
-        message: '개인정보 인증 중 오류가 발생했습니다.',
+        title: '인증 오류',
+        message: `개인정보 인증 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+        showCancel: false,
       });
-
-      //서버에서 내려주는 에러 메시지 처리
-      //console.error('개인정보 인증 실패:', error);
-      //에러 처리 로직 추가 (ex. 에러 메시지 표시)
-      /*
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(error.response.data.message);
-      } else {
-        alert('개인정보 인증에 실패했습니다. 다시 시도해주세요.');
-      }
-      */
     }
   };
 
