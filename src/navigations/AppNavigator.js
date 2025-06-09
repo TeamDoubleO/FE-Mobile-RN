@@ -192,9 +192,10 @@ export default function AppNavigator() {
             name="MyPageStack"
             component={MyPageStack}
             options={{ title: '마이페이지' }}
-            listeners={{
-              tabPress: (e) => handleTabPress(e, 'MyPageStack'), // 비밀번호 인증 이후 이동
-            }}
+            // 비밀번호 인증 모달
+            // listeners={{
+            //   tabPress: (e) => handleTabPress(e, 'MyPageStack'), // 비밀번호 인증 이후 이동
+            // }}
           />
         </Tab.Navigator>
       ) : (

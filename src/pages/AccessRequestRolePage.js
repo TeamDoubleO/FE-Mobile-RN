@@ -39,7 +39,12 @@ const AccessRequestRolePage = ({ route }) => {
         const dates = await getAvailableDates(hospitalId);
         setAvailableDates(dates);
       } catch (error) {
-        console.error('방문 가능 날짜 불러오기 실패:', error);
+        showNormalAlert({
+          title: '방문 가능 날짜 조회 실패',
+          message: `방문 가능 날짜 조회 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+          showCancel: false,
+          confirmText: '확인',
+        });
       } finally {
         setLoading(false);
       }
@@ -82,7 +87,7 @@ const AccessRequestRolePage = ({ route }) => {
     if (!checkedDate.some(Boolean)) {
       showNormalAlert({
         title: '방문증 신청 불가',
-        message: `방문 일시 선택 후\n방문증을 신청해주세요.`,
+        message: `방문 일시 선택 후\n방문증을 신청해 주세요.`,
         showCancel: false,
       });
     } else {

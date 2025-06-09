@@ -21,11 +21,16 @@ export const useAuthStore = create(
         set({
           accessToken: null,
           isLoggedIn: false,
+          userInfo: null,
         }),
 
       // 로그인 상태 관리
       isLoggedIn: false,
       setIsLoggedIn: (value) => set({ isLoggedIn: value }),
+
+      // 사용자 정보 관리
+      userInfo: null,
+      setUserInfo: (userInfo) => set({ userInfo }),
 
       // 로딩 상태 관리
       loading: false,
@@ -41,6 +46,7 @@ export const useAuthStore = create(
       partialize: (state) => ({
         accessToken: state.accessToken,
         isLoggedIn: state.isLoggedIn,
+        userInfo: state.userInfo,
       }),
       // 복원 완료 시 _hasHydrated를 true로 변경
       onRehydrateStorage: () => (state, error) => {

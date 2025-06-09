@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { View, Text } from 'react-native';
 import { verifyPatientInfo } from '../../apis/AccessRequestApi';
-import { getMyInfo } from '../../apis/MyPageApi';
 import { useAuthStore } from '../../stores/authStore';
 import { useNormalAlertStore } from '../../stores/alertStore';
 import { styles } from './styles/PatientVerficationForm.styles';
@@ -9,32 +8,10 @@ import NormalButton from '../buttons/NormalButton';
 import NormalInput from '../textinputs/NormalInput';
 
 const PatientVerficationForm = ({ hospitalId, onVerifiedHandler }) => {
-  const { setLoading } = useAuthStore();
-  const [userInfo, setUserInfo] = useState({ name: '', birth: '', contact: '' }); // 회원 정보 관리
+  const { setLoading, userInfo } = useAuthStore();
   const [isVerified, setIsVerified] = useState(false);
 
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
-
-  // 사용자 정보 불러오기
-  useEffect(() => {
-    const loadInfo = async () => {
-      setLoading(true);
-      try {
-        const data = await getMyInfo();
-        setUserInfo({
-          name: data.name,
-          birth: data.birthDate,
-          contact: data.contact,
-        });
-      } catch (error) {
-        console.log('내 정보 조회 실패:', error.response?.data || error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadInfo();
-  }, []);
 
   const handleVerifyPatient = async () => {
     setLoading(true);
@@ -69,9 +46,9 @@ const PatientVerficationForm = ({ hospitalId, onVerifiedHandler }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.contentTitle}>개인 정보 확인</Text>
-      <NormalInput placeholder={`이름: ${userInfo.name}`} isEditable={false} />
-      <NormalInput placeholder={`생년월일: ${userInfo.birth}`} isEditable={false} />
-      <NormalInput placeholder={`전화번호: ${userInfo.contact}`} isEditable={false} />
+      <NormalInput placeholder={`이름: ${userInfo?.name ?? ''}`} isEditable={false} />
+      <NormalInput placeholder={`생년월일: ${userInfo?.birthDate ?? ''}`} isEditable={false} />
+      <NormalInput placeholder={`전화번호: ${userInfo?.contact ?? ''}`} isEditable={false} />
       {/* 검증되지 않은 경우에만 검증 버튼 표시 */}
       {!isVerified && (
         <NormalButton
