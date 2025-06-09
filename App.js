@@ -10,6 +10,7 @@ import {
 import { getApp } from '@react-native-firebase/app';
 import { navigationRef, isReadyRef } from './src/navigations/NavigationRef';
 import { useNormalAlertStore } from './src/stores/alertStore';
+import { useNoticeBadge } from './src/hooks/useNoticeBadge';
 import AppNavigator from './src/navigations/AppNavigator';
 import NormalAlert from './src/components/alerts/NormalAlert';
 
@@ -31,6 +32,7 @@ const App = () => {
   // zustand의 상태와 show 함수 한 번에 가져오기
   const alertProps = useNormalAlertStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+  const { checkNotice, markAllAsRead } = useNoticeBadge();
 
   useEffect(() => {
     // 앱 첫 실행 시, 알림 권한 요청
@@ -60,8 +62,16 @@ const App = () => {
         title: remoteMessage.notification?.title || '알림',
         message: remoteMessage.notification?.body || '메시지 도착',
         confirmText: '이동',
-        onConfirmHandler: () => moveToNotice(),
+        onConfirmHandler: async () => {
+          await markAllAsRead();
+          moveToNotice();
+        },
+        onCancelHandler: async () => {
+          await checkNotice();
+        },
       });
+      // checkNotice 호출 전후로 로그
+      await checkNotice();
     });
 
     // 백그라운드/종료 상태에서 알림 클릭
@@ -78,7 +88,7 @@ const App = () => {
       unsubscribe();
       unsubscribeOpened();
     };
-  }, [showNormalAlert]);
+  }, [showNormalAlert, checkNotice]);
 
   return (
     <SafeAreaProvider>

@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getNoticeList, deleteAllNotice } from '../apis/NoticeListApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
+import { useNoticeBadgeStore } from '../stores/noticeStore';
 import { styles } from './styles/NoticeListPage.styles';
 import NoticeList from '../components/notices/NoticeList';
 import GrayButton from '../components/buttons/GrayButton';
@@ -13,6 +14,8 @@ const titleTypeMap = {
   '보호자 신청 거절': 'REJECT',
   '보호자 신청': 'APPLY',
 };
+
+const clearLastReadNoticeAt = useNoticeBadgeStore.getState().clearLastReadNoticeAt;
 
 function convertToOldFormat(data) {
   return data.map((item, idx) => {
@@ -71,6 +74,7 @@ export default function NoticeListPage() {
     try {
       await deleteAllNotice();
       setNoticeList([]);
+      clearLastReadNoticeAt();
       showNormalAlert({
         title: '알림 삭제 완료',
         showCancel: false,
