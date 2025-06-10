@@ -9,6 +9,7 @@ import { useAuthStore } from '../stores/authStore';
 import { useModalStore } from '../stores/modalStore';
 import { colors } from '../constants/colors';
 import { navigationRef, isReadyRef } from './NavigationRef';
+import { useNoticeBadge } from '../hooks/useNoticeBadge';
 import LoadingOverlay from '../components/loadings/LoadingOverlay';
 import PasswordConfirmModal from '../components/modals/PasswordConfirmModal';
 import AnimatedTabBar from './AnimatedTabBar';
@@ -111,6 +112,9 @@ export default function AppNavigator() {
   // 현재 라우트 이름을 저장하는 state
   const [currentRouteName, setCurrentRouteName] = useState('WelcomePage');
 
+  // 알림 읽음 여부 관련
+  const { hasUnread, markAllAsRead } = useNoticeBadge();
+
   // useEffect: 앱 시작 시 토큰 유효성 확인
   useEffect(() => {
     if (!_hasHydrated) return;
@@ -186,7 +190,14 @@ export default function AppNavigator() {
           <Tab.Screen
             name="NoticeStack"
             component={NoticeStack}
-            options={{ title: '알림', tabBarBadge: 2 }}
+            options={{
+              title: '알림',
+            }}
+            listeners={{
+              tabPress: () => {
+                markAllAsRead(); // 알림탭 진입 시 읽음 처리
+              },
+            }}
           />
           <Tab.Screen
             name="MyPageStack"

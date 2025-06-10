@@ -31,12 +31,6 @@ export const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 8,
   },
-  icon: {
-    color: colors.lightGray,
-  },
-  iconActive: {
-    color: colors.primary,
-  },
   label: {
     fontSize: 13,
     color: colors.lightGray,
@@ -46,5 +40,16 @@ export const styles = StyleSheet.create({
   labelActive: {
     color: colors.darkGray,
     fontWeight: 'bold',
+  },
+  noticeBadge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: 'red',
+    borderRadius: 8,
+    width: 8,
+    height: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
