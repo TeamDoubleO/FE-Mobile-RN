@@ -47,4 +47,15 @@ export const styles = StyleSheet.create({
     color: colors.darkGray,
     fontWeight: 'bold',
   },
+  noticeBadge: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    backgroundColor: 'red',
+    borderRadius: 8,
+    width: 12,
+    height: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

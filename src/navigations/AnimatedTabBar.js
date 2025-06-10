@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { View, TouchableOpacity, Animated, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNoticeBadge } from '../hooks/useNoticeBadge';
 import { styles } from './styles/AnimatedTabBar.styles';
 import { colors } from '../constants/colors';
 
@@ -22,6 +23,7 @@ const TAB_LABELS = {
 export default function AnimatedTabBar({ state, descriptors, navigation }) {
   const scales = useRef(state.routes.map(() => new Animated.Value(1))).current;
   const tilts = useRef(state.routes.map(() => new Animated.Value(0))).current;
+  const { hasUnread } = useNoticeBadge();
 
   const onPress = (route, index, isFocused) => {
     const event = navigation.emit({
@@ -89,6 +91,8 @@ export default function AnimatedTabBar({ state, descriptors, navigation }) {
                   size={25}
                   style={isFocused ? styles.iconActive : styles.icon}
                 />
+                {/* 알림 탭에만 뱃지 표시 */}
+                {route.name === 'NoticeStack' && hasUnread && <View style={styles.noticeBadge} />}
               </Animated.View>
               <Text style={[styles.label, isFocused && styles.labelActive]}>{label}</Text>
             </TouchableOpacity>

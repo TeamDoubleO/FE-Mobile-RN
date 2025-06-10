@@ -183,14 +183,16 @@ export default function AppNavigator() {
       {isLoggedIn ? (
         <Tab.Navigator
           screenOptions={{ headerShown: false }}
-          // tabBar={(props) => <AnimatedTabBar {...props} />}
+          tabBar={(props) => <AnimatedTabBar {...props} />}
         >
           <Tab.Screen name="MainPage" component={MainPage} options={{ title: '홈' }} />
           <Tab.Screen name="AccessStack" component={AccessStack} options={{ title: '출입 권한' }} />
           <Tab.Screen
             name="NoticeStack"
             component={NoticeStack}
-            options={{ title: '알림', tabBarBadge: hasUnread ? true : undefined }}
+            options={{
+              title: '알림',
+            }}
             listeners={{
               tabPress: () => {
                 markAllAsRead(); // 알림탭 진입 시 읽음 처리
