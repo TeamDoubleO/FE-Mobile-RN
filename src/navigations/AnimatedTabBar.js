@@ -1,16 +1,24 @@
-import { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Animated, Text } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LottieView from 'lottie-react-native';
+import acccessListIconGreen from '../assets/lotties/accessListIconGreen2.json';
+import acccessListIconGray from '../assets/lotties/accessListIconGray2.json';
+import homeIconGreen from '../assets/lotties/homeIconGreen2.json';
+import homeIconGray from '../assets/lotties/homeIconGray2.json';
+import noticeIconGreen from '../assets/lotties/noticeIconGreen.json';
+import noticeIconGray from '../assets/lotties/noticeIconGray2.json';
+import myPageIconGreen from '../assets/lotties/myPageGreen.json';
+import myPageIconGray from '../assets/lotties/myPageGray.json';
 import { useNoticeBadge } from '../hooks/useNoticeBadge';
 import { styles } from './styles/AnimatedTabBar.styles';
 import { colors } from '../constants/colors';
 
 const TAB_ICONS = {
-  MainPage: 'home',
-  AccessStack: 'list',
-  MyPageStack: 'person-sharp',
-  NoticeStack: 'notifications',
+  MainPage: (isFocused) => (isFocused ? homeIconGreen : homeIconGray),
+  AccessStack: (isFocused) => (isFocused ? acccessListIconGreen : acccessListIconGray),
+  MyPageStack: (isFocused) => (isFocused ? myPageIconGreen : myPageIconGray),
+  NoticeStack: (isFocused) => (isFocused ? noticeIconGreen : noticeIconGray),
 };
 
 const TAB_LABELS = {
@@ -23,7 +31,23 @@ const TAB_LABELS = {
 export default function AnimatedTabBar({ state, descriptors, navigation }) {
   const scales = useRef(state.routes.map(() => new Animated.Value(1))).current;
   const tilts = useRef(state.routes.map(() => new Animated.Value(0))).current;
+  const lottieRefs = useRef(state.routes.map(() => React.createRef())).current;
   const { hasUnread } = useNoticeBadge();
+
+  // 포커스 이동 시 Lottie 상태 제어
+  useEffect(() => {
+    state.routes.forEach((route, index) => {
+      const isFocused = state.index === index;
+      const lottieRef = lottieRefs[index]?.current;
+      if (lottieRef) {
+        if (isFocused) {
+          lottieRef.play();
+        } else {
+          lottieRef.reset();
+        }
+      }
+    });
+  }, [state.index, state.routes, lottieRefs]);
 
   const onPress = (route, index, isFocused) => {
     const event = navigation.emit({
@@ -57,7 +81,7 @@ export default function AnimatedTabBar({ state, descriptors, navigation }) {
           // 현재 탭이 포커스된 상태인지 확인
           const isFocused = state.index === index;
           // 현재 탭의 아이콘과 레이블 설정
-          const iconName = TAB_ICONS[route.name] || 'ellipse-outline';
+          const iconName = TAB_ICONS[route.name](isFocused);
           const label = TAB_LABELS[route.name] || route.name;
 
           return (
@@ -86,10 +110,11 @@ export default function AnimatedTabBar({ state, descriptors, navigation }) {
                   },
                 ]}
               >
-                <Ionicons
-                  name={iconName}
-                  size={25}
-                  style={isFocused ? styles.iconActive : styles.icon}
+                <LottieView
+                  ref={lottieRefs[index]}
+                  source={iconName}
+                  loop={false}
+                  style={{ width: 32, height: 32 }}
                 />
                 {/* 알림 탭에만 뱃지 표시 */}
                 {route.name === 'NoticeStack' && hasUnread && <View style={styles.noticeBadge} />}
