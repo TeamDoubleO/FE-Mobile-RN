@@ -17,7 +17,13 @@ const MyAccessDetailModal = ({ isVisible, onClose, onConfirm, data }) => {
       : '상대방';
 
   // QR 버튼 노출 조건
-  const isQrAvailable = data.approval === '출입 가능';
+  const isQrAvailable = (() => {
+    if (data.issuanceStatus !== 'ISSUED') return false;
+    const now = new Date();
+    const start = new Date(data.startDate);
+    const end = new Date(data.expireDate);
+    return start <= now && now <= end;
+  })();
 
   // QR 버튼 클릭 핸들러
   const handleQrPress = async () => {
