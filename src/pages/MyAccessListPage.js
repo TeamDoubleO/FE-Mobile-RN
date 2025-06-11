@@ -51,7 +51,9 @@ const MyAccessListPage = () => {
       setLoading(true);
       try {
         const data = await getAccessList();
-        setMyAccessList(data);
+        // accessAreaNames 필드 추가
+        const converted = addAccessAreaNamesField(data);
+        setMyAccessList(converted);
       } catch (error) {
         showNormalAlert({
           title: '출입증 목록 조회 실패',
@@ -71,7 +73,9 @@ const MyAccessListPage = () => {
     setRefreshing(true);
     try {
       const data = await getAccessList();
-      setMyAccessList(data);
+      // accessAreaNames 필드 추가
+      const converted = addAccessAreaNamesField(data);
+      setMyAccessList(converted);
     } catch (error) {
       showNormalAlert({
         title: '출입증 새로고침 실패',
@@ -83,6 +87,14 @@ const MyAccessListPage = () => {
       setRefreshing(false);
     }
   };
+
+  // 출입증 객체에 accessAreaNames 필드 추가
+  function addAccessAreaNamesField(list) {
+    return (list || []).map((item) => ({
+      ...item,
+      accessAreaNames: item.accessAreas ? item.accessAreas.map((area) => area.areaName) : [],
+    }));
+  }
 
   // 출입 권한 클릭 시 모달 띄우기
   const handleItemPress = (section, item, index) => {
