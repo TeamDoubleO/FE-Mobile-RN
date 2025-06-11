@@ -96,12 +96,15 @@ const MyAccessListPage = () => {
       visitorType: getVisitCategoryLabel(access.visitCategory),
       startDate: formatDateTime(access.startedAt),
       expireDate: formatDateTime(access.expiredAt),
-      approval: getApprovalStatus(access.startedAt, access.expiredAt),
+      approval: getApprovalStatus(access.startedAt, access.expiredAt, access.issuanceStatus),
       patientNumber: access.patientId,
       issuer: access.memberId,
       passId: access.passId,
       guardians: isPatient ? access.guardians : undefined,
       patientName: isGuardian ? access.patientName : undefined,
+      issuanceStatus: access.issuanceStatus,
+      startedAt: access.startedAt,
+      expiredAt: access.expiredAt,
     });
 
     setShowModal(true);
@@ -132,25 +135,35 @@ const MyAccessListPage = () => {
   };
 
   // 출입 가능 상태 함수
-  const getApprovalStatus = (startedAt, expiredAt) => {
+  const getApprovalStatus = (startedAt, expiredAt, issuanceStatus) => {
     const now = new Date();
     const start = new Date(startedAt);
     const end = new Date(expiredAt);
-
-    if (start > now) {
-      return '출입 대기';
-    } else if (end < now) {
-      return '만료';
-    } else {
-      return '출입 가능';
-    }
+    if (issuanceStatus === 'ISSUED') {
+      if (start > now) {
+        return '출입\n대기';
+      } else if (end < now) {
+        return '만료';
+      } else {
+        return '출입\n가능';
+      }
+    } else if (issuanceStatus === 'PENDING') return '승인\n대기';
+    else return '거절';
   };
 
   //병원 Id로 병원 이름 찾기
   const getHospitalName = (hospitalId) => getHospitalNameByList(hospitalId, hospitalNameList);
 
+  // 만료/거절 제외 & 시작일 오름차순 정렬
+  const filteredAndSortedList = (myAccessList || [])
+    .filter((item) => {
+      const status = getApprovalStatus(item.startedAt, item.expiredAt, item.issuanceStatus);
+      return status !== '만료' && status !== '거절';
+    })
+    .sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));
+
   // NormalListDeep에 넘길 데이터 가공
-  const sections = (myAccessList || []).reduce((acc, cur) => {
+  const sections = filteredAndSortedList.reduce((acc, cur) => {
     //acc - accumulator(누적값, 병원별로 묶안 배열), cur - current(현재 배열에서 처리중인 값)
     const hospitalId = cur.hospitalId;
     let hospitalName = getHospitalName(hospitalId); //id로 이름 찾아서 저장
@@ -200,7 +213,7 @@ const MyAccessListPage = () => {
                   </View>
                   <View style={styles.validateTextPadding}>
                     <Text style={styles.validateText}>
-                      {getApprovalStatus(item.startedAt, item.expiredAt)}
+                      {getApprovalStatus(item.startedAt, item.expiredAt, item.issuanceStatus)}
                     </Text>
                   </View>
                 </View>

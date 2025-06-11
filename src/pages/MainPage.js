@@ -19,9 +19,9 @@ function getHospitalNameByList(hospitalId, hospitalNameList) {
 }
 
 // 출입증 데이터로 임시 VC 생성
-function generateUserVCfromAccessList(mockAccessList, hospitalNameList, userName) {
+function generateUserVCfromAccessList(AccessList, hospitalNameList, userName) {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
-  return mockAccessList.map((item, idx) => ({
+  return AccessList.map((item, idx) => ({
     did: `did:example:${String(item.passId).padStart(16, '0')}-${randomNum}`,
     passId: item.passId,
     userName,
@@ -44,10 +44,11 @@ const formatDateTime = (date) => {
   return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
 };
 
-function isAccessible(startedAt, expiredAt) {
+function isQrAvailable(item) {
+  if (item.issuanceStatus !== 'ISSUED') return false;
   const now = new Date();
-  const start = new Date(startedAt);
-  const end = new Date(expiredAt);
+  const start = new Date(item.startedAt);
+  const end = new Date(item.expiredAt);
   return start <= now && now <= end;
 }
 
@@ -111,9 +112,7 @@ const MainPage = () => {
   useEffect(() => {
     if (hospitalNameList.length > 0 && myAccessList.length > 0 && userName) {
       // 출입 가능한 리스트
-      const accessibleList = myAccessList.filter((item) =>
-        isAccessible(item.startedAt, item.expiredAt),
-      );
+      const accessibleList = myAccessList.filter((item) => isQrAvailable(item));
       setUserVC(generateUserVCfromAccessList(accessibleList, hospitalNameList, userName));
       setHasAccessAuthority(accessibleList.length > 0);
     }
