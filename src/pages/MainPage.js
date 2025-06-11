@@ -18,18 +18,59 @@ function getHospitalNameByList(hospitalId, hospitalNameList) {
   return hospital ? hospital.hospitalName : `병원명 로딩 중 . . .병원: #${hospitalId}`;
 }
 
-// 출입증 데이터로 임시 VC 생성
-function generateUserVCfromAccessList(AccessList, hospitalNameList, userName) {
-  const randomNum = Math.floor(100000 + Math.random() * 900000);
-  return AccessList.map((item, idx) => ({
-    did: `did:example:${String(item.passId).padStart(16, '0')}-${randomNum}`,
-    passId: item.passId,
-    userName,
-    hospitalName: getHospitalNameByList(item.hospitalId, hospitalNameList),
-    startDate: formatDateTime(item.startedAt),
-    expireDate: formatDateTime(item.expiredAt),
-    issuedAt: Date.now(),
+// 출입증 객체에 accessAreaCodes 필드 추가
+function addAccessAreaCodesField(list) {
+  return (list || []).map((item) => ({
+    ...item,
+    accessAreaCodes: item.accessAreas ? item.accessAreas.map((area) => area.areaCode) : [],
   }));
+}
+
+// 출입증 데이터로 임시 VC 생성
+// function generateUserVCfromAccessList(AccessList, hospitalNameList, userName) {
+//   const randomNum = Math.floor(100000 + Math.random() * 900000);
+//   return AccessList.map((item, idx) => ({
+//     did: `did:example:${String(item.passId).padStart(16, '0')}-${randomNum}`,
+//     passId: item.passId,
+//     userName,
+//     hospitalName: getHospitalNameByList(item.hospitalId, hospitalNameList),
+//     startDate: formatDateTime(item.startedAt),
+//     expireDate: formatDateTime(item.expiredAt),
+//     issuedAt: Date.now(),
+//   }));
+// }
+
+// 출입증 데이터로 임시 VC 생성 - did 적용 전
+function generateUserVCfromAccessList(AccessList, hospitalNameList, userName) {
+  const withCodes = addAccessAreaCodesField(AccessList);
+  return withCodes.map((item) => {
+    // 카드에 표시될 데이터
+    const hospitalName = getHospitalNameByList(item.hospitalId, hospitalNameList);
+    const startDate = formatDateTime(item.startedAt);
+    const expireDate = formatDateTime(item.expiredAt);
+
+    // QR에 쓸 원본 데이터
+    const qrPayload = {
+      passId: item.passId,
+      memberId: item.memberId,
+      memberName: userName,
+      hospitalId: item.hospitalId,
+      accessAreaCodes: item.accessAreaCodes,
+      visitCategory: item.visitCategory,
+      startedAt: item.startedAt,
+      expiredAt: item.expiredAt,
+    };
+
+    return {
+      ...qrPayload,
+      // 카드에 표시될 정보
+      userName,
+      hospitalName,
+      startDate,
+      expireDate,
+      did: `did:example:${String(item.passId).padStart(16, '0')}`,
+    };
+  });
 }
 
 // 날짜 포맷 함수 (YYYY-MM-DD HH:mm)
@@ -117,14 +158,6 @@ const MainPage = () => {
       setHasAccessAuthority(accessibleList.length > 0);
     }
   }, [hospitalNameList, myAccessList, userName]);
-
-  const navigateToAccessList = () => {
-    navigation.navigate('AccessListPage');
-  };
-
-  const navigateToMyPage = () => {
-    navigation.navigate('MyPage');
-  };
 
   return (
     <View style={styles.container}>

@@ -9,7 +9,22 @@ import NormalButton from '../../components/buttons/NormalButton';
 import { qrData_sample } from '../../mocks/mockQRData';
 
 // hasAccessAuthority: 출입 권한 여부, userVC : VC에 담을 사용자 정보, qrData : QR에 담을 JSON 문자열
-const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, expireDate }) => {
+const QrCard = ({
+  hasAccessAuthority,
+  did,
+  userName,
+  hospitalName,
+  startDate,
+  expireDate,
+  passId,
+  memberId,
+  memberName,
+  hospitalId,
+  accessAreaCodes,
+  visitCategory,
+  startedAt,
+  expiredAt,
+}) => {
   // 해당 QR의 상세 페이지로 이동 (아직 미구현)
   //const navigation = useNavigation();
   //   const navigateToAccessListDeatail = () => {
@@ -19,7 +34,19 @@ const QrCard = ({ hasAccessAuthority, did, userName, hospitalName, startDate, ex
   // CardFlip의 ref 선언
   const cardFlipRef = useRef();
   // 임시: QR에 담을 JSON 문자열
-  const qrData = JSON.stringify({ did, userName, hospitalName, startDate, expireDate });
+  // const qrData = JSON.stringify({ did, userName, hospitalName, startDate, expireDate });
+
+  // 임시: QR에 담을 JSON 문자열 - did 적용 전
+  const qrData = JSON.stringify({
+    passId,
+    memberId,
+    memberName,
+    hospitalId,
+    accessAreaCodes,
+    visitCategory,
+    startedAt,
+    expiredAt,
+  });
 
   // 출입 권한이 없을 때 안내 카드
   if (!hasAccessAuthority) {

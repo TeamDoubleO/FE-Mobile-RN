@@ -103,14 +103,7 @@ const QrCards = ({ userVC, hasAccessAuthority, initialIndex = 0 }) => {
                 marginTop: '9%',
               }}
             >
-              <QrCard
-                did={item.did}
-                userName={item.userName}
-                hospitalName={item.hospitalName}
-                startDate={item.startDate}
-                expireDate={item.expireDate}
-                hasAccessAuthority={true}
-              />
+              <QrCard {...item} hasAccessAuthority={true} />
             </Animated.View>
           );
         }}
