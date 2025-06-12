@@ -59,8 +59,10 @@ const QrCard = ({
               source={require('../../assets/images/mainBackground.png')}
               resizeMode="contain" // 이미지 비율 유지
             />
-            <Text style={styles.cardText}>등록된 출입 권한이 존재하지 않습니다.</Text>
-            <Text style={styles.cardSubText}>방문 신청 버튼을 눌러 출입 권한을 신청해 주세요.</Text>
+            <Text style={styles.cardText}>{'등록된 출입 권한이\n존재하지 않습니다.'}</Text>
+            <Text style={styles.cardSubText}>
+              {'방문 신청 버튼을 눌러\n출입 권한을 신청해 주세요.'}
+            </Text>
           </View>
         </View>
       </View>

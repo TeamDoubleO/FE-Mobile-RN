@@ -41,11 +41,13 @@ export const styles = StyleSheet.create({
     color: colors.black,
     textAlign: 'center',
     marginBottom: '5%',
+    lineHeight: 36,
   },
   cardSubText: {
     ...fonts.mediumText,
     color: colors.darkGray,
     textAlign: 'center',
+    lineHeight: 30,
   },
   qrTitle: {
     ...fonts.mediumTitle,
