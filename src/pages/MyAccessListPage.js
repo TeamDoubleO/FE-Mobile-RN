@@ -17,10 +17,12 @@ function getHospitalNameByList(hospitalId, hospitalNameList) {
 }
 
 const MyAccessListPage = () => {
-  const navigation = useNavigation();
   const { setLoading } = useAuthStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
   const hospitalList = useHospitalStore.getState().hospitalList;
+
+  const navigation = useNavigation();
+
   const [myAccessList, setMyAccessList] = useState([]);
   const [hospitalNameList, setHospitalNameList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);

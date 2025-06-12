@@ -33,6 +33,7 @@ function convertToOldFormat(data) {
 export default function NoticeListPage() {
   const { setLoading } = useAuthStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
   const [noticeList, setNoticeList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 

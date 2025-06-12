@@ -35,6 +35,7 @@ const getBirthDateFromRRN = (rrn) => {
 
 const SignUpPage = () => {
   const { setLoading } = useAuthStore();
+
   const navigation = useNavigation();
   const route = useRoute();
 

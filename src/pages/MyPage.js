@@ -3,6 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import { deleteUser, logoutUser } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
+import { useAgentStore } from '../stores/agentStore';
+import { deleteWallet } from '../credo/walletService';
 import { styles } from './styles/MyPage.styles';
 import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
@@ -10,8 +12,10 @@ import GrayButton from '../components/buttons/GrayButton';
 
 export default function MyPage() {
   const { clearAccessToken, userInfo } = useAuthStore();
-  const navigation = useNavigation();
+  const { agent, clearAgent } = useAgentStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
+  const navigation = useNavigation();
 
   const navigateToChangePassword = () => {
     navigation.navigate('ChangePasswordPage');
@@ -29,6 +33,9 @@ export default function MyPage() {
   const handleLogoutConfirm = async () => {
     try {
       await logoutUser();
+      await deleteWallet(agent);
+      clearAgent(); // 전역에서 Credo Agent 완전히 해제
+
       showNormalAlert({
         title: '로그아웃 성공',
         message: '로그아웃이 완료되었습니다.\n시작 페이지로 이동합니다.',
@@ -60,6 +67,9 @@ export default function MyPage() {
   const handleDeleteUserConfirm = async () => {
     try {
       await deleteUser();
+      await deleteWallet(agent);
+      clearAgent(); // 전역에서 Credo Agent 완전히 해제
+
       showNormalAlert({
         title: '회원 탈퇴 성공',
         message: '회원 탈퇴가 완료되었습니다.\n언제든 다시 찾아주세요:)',

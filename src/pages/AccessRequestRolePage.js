@@ -6,6 +6,8 @@ import { getAvailableDates } from '../apis/AccessRequestApi';
 import { createAccessPass } from '../apis/AccessRequestApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
+import { useAgentStore } from '../stores/agentStore';
+import { connectHospital } from '../credo/hospitalConnectService';
 import { styles } from './styles/AccessRequestRolePage.styles';
 import NormalButton from '../components/buttons/NormalButton';
 import NormalCheckbox from '../components/checkboxes/NormalCheckbox';
@@ -13,8 +15,10 @@ import PatientVerficationForm from '../components/accessRequests/PatientVerficat
 import GuardianVerificationForm from '../components/accessRequests/GuardianVerificationForm';
 
 const AccessRequestRolePage = ({ route }) => {
-  const { setLoading } = useAuthStore();
   const { hospitalId, hospitalName } = route.params;
+
+  const { setLoading } = useAuthStore();
+  const { agent } = useAgentStore();
 
   const [role, setRole] = useState('PATIENT');
   const [isVerified, setIsVerified] = useState(false); // 검증 여부
@@ -117,6 +121,19 @@ const AccessRequestRolePage = ({ route }) => {
       };
 
       await createAccessPass(form);
+      await connectHospital(agent);
+      // try {
+      //   await connectHospital(agent);
+      //   // 연결 성공 후 로직 (예: 알림, 출입증 화면 이동 등)
+      // } catch (error) {
+      //   // 실패 처리
+      //   showNormalAlert({
+      //     title: 'Connection 오류',
+      //     message: 'hospital connection에 실패했습니다.\n' + (e.message || String(error)),
+      //     showCancel: false,
+      //   });
+      // }
+
       showNormalAlert({
         title: '방문증 신청 완료',
         message: `방문증 신청을 완료하였습니다.\n메인 페이지로 이동합니다.`,

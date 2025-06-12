@@ -7,6 +7,8 @@ import { getApp } from '@react-native-firebase/app';
 import { loginUser } from '../apis/LoginApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
+import { useAgentStore } from '../stores/agentStore';
+import { createCredoAgent } from '../credo/agentService';
 import { styles } from './styles/LoginPage.styles';
 import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
@@ -16,6 +18,8 @@ import { getMyInfo } from '../apis/MyPageApi';
 
 const LoginPage = () => {
   const { setIsLoggedIn, setLoading, setOnlyAccessToken, setUserInfo } = useAuthStore();
+  const { setAgent } = useAgentStore();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   const [form, setForm] = useState({
     email: '', // 이메일
@@ -27,7 +31,6 @@ const LoginPage = () => {
   const [isPwValid, setIsPwValid] = useState(false); //비밀번호 유효성
 
   const navigation = useNavigation();
-  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   const navigateToSignUp = () => {
     navigation.navigate('SignUpVerificationPage');
@@ -90,6 +93,22 @@ const LoginPage = () => {
         setOnlyAccessToken(data.data.accessToken);
         const userData = await getMyInfo();
         setUserInfo(userData);
+
+        const agent = await createCredoAgent();
+        setAgent(agent);
+        // try {
+        //   const agent = await createCredoAgent();
+        //   setAgent(agent);
+        // } catch (error) {
+        //   showNormalAlert({
+        //     title: 'Agent 오류',
+        //     message:
+        //       'Agent 초기화에 실패했습니다. (자격 증명 등 DID 기능 제한될 수 있음)\n' +
+        //       (e.message || String(error)),
+        //     showCancel: false,
+        //   });
+        // }
+
         showNormalAlert({
           title: '로그인 성공',
           message: `로그인에 성공하였습니다.\n메인 페이지로 이동합니다.`,
@@ -99,6 +118,7 @@ const LoginPage = () => {
           },
         });
       } else {
+        console.error('로그인 에러:', error);
         showNormalAlert({
           title: '로그인 실패',
           message: `로그인에 실패했습니다.\n다시 시도해 주세요.`,

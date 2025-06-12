@@ -12,6 +12,8 @@ import NormalButton from '../components/buttons/NormalButton';
 
 const ChangePasswordPage = () => {
   const { setLoading } = useAuthStore();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
   const [originalPassword, setOriginalPassword] = useState(''); // 기존 비밀번호
   const [newPassword, setNewPassword] = useState(''); // 새 비밀번호
   const [confirmNewPassword, setConfirmNewPassword] = useState(''); // 새 비밀번호 확인
@@ -19,7 +21,6 @@ const ChangePasswordPage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false); // 제출 버튼 눌렀는지 여부
 
   const navigation = useNavigation();
-  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   // 비밀번호 규칙 검사 핸들러 (8자 이상, 영문/숫자/특수문자 포함)
   const isValidPassword = (pw) =>

@@ -9,11 +9,11 @@ import NormalList from '../components/lists/NormalList';
 
 const AccessRequestPage = () => {
   const { setLoading } = useAuthStore();
-  const [searchText, setSearchText] = useState('');
-  const [hospitalName, setHospitalName] = useState([]);
-
   const setHospitalList = useHospitalStore.getState().setHospitalList;
   const hospitalList = useHospitalStore.getState().hospitalList;
+
+  const [searchText, setSearchText] = useState('');
+  const [hospitalName, setHospitalName] = useState([]);
 
   // 병원 목록 불러오기
   useEffect(() => {

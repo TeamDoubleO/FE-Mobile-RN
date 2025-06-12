@@ -42,7 +42,8 @@ const maskRRN = (rrn) => {
 };
 
 const SignUpVerificationPage = () => {
-  //상태 변수
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
   const [form, setForm] = useState({
     name: '', //이름
     rrn: '', // 주민등록번호
@@ -53,7 +54,6 @@ const SignUpVerificationPage = () => {
   const [error, setError] = useState({}); // 에러 메시지
 
   const navigation = useNavigation();
-  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   const navigateToLogin = () => {
     navigation.navigate('LoginPage');

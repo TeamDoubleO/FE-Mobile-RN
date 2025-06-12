@@ -9,9 +9,9 @@ import NormalInput from '../textinputs/NormalInput';
 
 const PatientVerficationForm = ({ hospitalId, onVerifiedHandler }) => {
   const { setLoading, userInfo } = useAuthStore();
-  const [isVerified, setIsVerified] = useState(false);
-
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
+  const [isVerified, setIsVerified] = useState(false);
 
   const handleVerifyPatient = async () => {
     setLoading(true);
