@@ -134,7 +134,6 @@ const MainPage = () => {
           setHospitalNameList(hospitalList);
           setUserName(myInfo.name);
 
-          // 출입증 목록 불러오기 TODO : 여기도 로딩이나 어싱크 처리 필요
           const accessList = await getAccessList();
           setMyAccessList(accessList);
 
