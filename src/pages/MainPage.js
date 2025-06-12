@@ -96,6 +96,7 @@ function isQrAvailable(item) {
 const MainPage = () => {
   const { setLoading } = useAuthStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
   // 임시: 상태변수로 출입 권한 제어
   const [hasAccessAuthority, setHasAccessAuthority] = useState(true);
 
@@ -123,7 +124,10 @@ const MainPage = () => {
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        setLoading(true);
+        if (!myAccessList || myAccessList.length === 0) {
+          setLoading(true);
+        }
+
         try {
           // 병원, 유저 정보 병렬로 불러오기
           const [hospitalList, myInfo] = await Promise.all([getHospitalList(), getMyInfo()]);
@@ -131,7 +135,9 @@ const MainPage = () => {
           setUserName(myInfo.name);
 
           // 출입증 목록 불러오기 TODO : 여기도 로딩이나 어싱크 처리 필요
-          getAccessList().then(setMyAccessList);
+          const accessList = await getAccessList();
+          setMyAccessList(accessList);
+
           // 목업 출입증 데이터 불러오기
           // setMyAccessList(mockAccessList);
         } catch (error) {
@@ -146,7 +152,7 @@ const MainPage = () => {
         }
       };
       fetchData();
-    }, [setLoading]),
+    }, [setLoading, myAccessList]),
   );
 
   // hospitalNameList, myAccessList 준비되면 userVC 생성
