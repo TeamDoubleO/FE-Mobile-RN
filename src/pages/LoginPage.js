@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { getMessaging, getToken } from '@react-native-firebase/messaging';
 import { getApp } from '@react-native-firebase/app';
 import { loginUser } from '../apis/LoginApi';
+import { getMyInfo } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
 import { useAgentStore } from '../stores/agentStore';
@@ -14,7 +15,6 @@ import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
 import NormalButton from '../components/buttons/NormalButton';
 import GrayButton from '../components/buttons/GrayButton';
-import { getMyInfo } from '../apis/MyPageApi';
 
 const LoginPage = () => {
   const { setIsLoggedIn, setLoading, setOnlyAccessToken, setUserInfo } = useAuthStore();
