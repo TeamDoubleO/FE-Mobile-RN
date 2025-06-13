@@ -126,7 +126,7 @@ const AccessRequestRolePage = ({ route }) => {
     } catch (error) {
       showNormalAlert({
         title: '방문증 신청 실패',
-        message: '방문증 신청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+        message: '방문증 신청 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
         showCancel: false,
       });
     } finally {
