@@ -33,7 +33,6 @@ export default function MyPage() {
   const handleLogoutConfirm = async () => {
     try {
       await logoutUser();
-      await deleteWallet(agent);
       clearAgent(); // 전역에서 Credo Agent 완전히 해제
 
       showNormalAlert({
@@ -67,7 +66,7 @@ export default function MyPage() {
   const handleDeleteUserConfirm = async () => {
     try {
       await deleteUser();
-      await deleteWallet(agent);
+      await deleteWallet(agent); // wallet 삭제
       clearAgent(); // 전역에서 Credo Agent 완전히 해제
 
       showNormalAlert({
