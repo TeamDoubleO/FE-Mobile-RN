@@ -13,6 +13,7 @@ import GrayButton from '../components/buttons/GrayButton';
 export default function MyPage() {
   const { clearAccessToken, userInfo } = useAuthStore();
   const { agent, clearAgent } = useAgentStore();
+  const { setLoading } = useAuthStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   const navigation = useNavigation();
@@ -31,6 +32,8 @@ export default function MyPage() {
   };
 
   const handleLogoutConfirm = async () => {
+    setLoading(true);
+
     try {
       await logoutUser();
       clearAgent(); // 전역에서 Credo Agent 완전히 해제
@@ -51,6 +54,8 @@ export default function MyPage() {
         confirmText: '확인',
       });
       console.log('로그아웃 실패:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

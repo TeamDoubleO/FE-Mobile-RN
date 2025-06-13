@@ -26,6 +26,7 @@ const MyAccessListPage = () => {
   const [myAccessList, setMyAccessList] = useState([]);
   const [hospitalNameList, setHospitalNameList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Alert 관리 상태변수
   const [showModal, setShowModal] = useState(false); // 모달 표시 여부
@@ -35,22 +36,26 @@ const MyAccessListPage = () => {
   useEffect(() => {
     const getHospitalsName = async () => {
       setLoading(true);
+      setIsLoading(true);
+
       try {
         const data = await getHospitalList();
         setHospitalNameList(data);
       } catch (error) {
         setHospitalNameList(hospitalList);
       } finally {
-        setLoading(false);
+        //if (myAccessList) setLoading(false);
       }
     };
     getHospitalsName();
-  }, [setLoading]);
+  }, []);
 
   // 출입증 목록 불러오기
   useEffect(() => {
+    setLoading(true);
+    setIsLoading(true);
+
     const getMyAccessList = async () => {
-      setLoading(true);
       try {
         const data = await getAccessList();
         // accessAreaNames 필드 추가
@@ -65,10 +70,11 @@ const MyAccessListPage = () => {
         });
       } finally {
         setLoading(false);
+        setIsLoading(false);
       }
     };
     getMyAccessList();
-  }, [setLoading]);
+  }, []);
 
   //새로고침 함수
   const onRefresh = async () => {
@@ -197,7 +203,9 @@ const MyAccessListPage = () => {
 
   return (
     <>
-      {sections.length > 0 ? (
+      {isLoading || !myAccessList ? (
+        <Text style={styles.infoText}>출입증 목록을 불러오는 중입니다. . .</Text>
+      ) : sections.length > 0 ? (
         <NormalListDeep
           cardStyle={{
             paddingHorizontal: 0,
