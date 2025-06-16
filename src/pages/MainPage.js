@@ -3,13 +3,10 @@ import { View, Image } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { getAccessList } from '../apis/MyAccessListApi';
 import { getHospitalList } from '../apis/AccessRequestApi';
-import { getMyInfo } from '../apis/MyPageApi';
-import { mockAccessList } from '../mocks/mockAccessList';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
 import { styles } from './styles/MainPage.styles';
 import QrCards from '../components/cards/QrCards';
-import NormalButton from '../components/buttons/NormalButton';
 
 // TODO: 리펙토링 할 때 같은 코드는 export해서 import해서 쓰기
 // 병원 Id로 병원 이름 찾기
@@ -94,7 +91,7 @@ function isQrAvailable(item) {
 }
 
 const MainPage = () => {
-  const { setLoading } = useAuthStore();
+  const { setLoading, userInfo } = useAuthStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   // 임시: 상태변수로 출입 권한 제어
@@ -130,9 +127,9 @@ const MainPage = () => {
 
         try {
           // 병원, 유저 정보 병렬로 불러오기
-          const [hospitalList, myInfo] = await Promise.all([getHospitalList(), getMyInfo()]);
+          const hospitalList = await getHospitalList();
           setHospitalNameList(hospitalList);
-          setUserName(myInfo.name);
+          setUserName(userInfo?.name || '이름 로딩 중 . . .');
 
           const accessList = await getAccessList();
           setMyAccessList(accessList);

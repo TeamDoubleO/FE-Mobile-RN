@@ -39,4 +39,11 @@ export const styles = StyleSheet.create({
     marginTop: '10%',
     marginBottom: 50,
   },
+  noDatesText: {
+    ...fonts.smallText,
+    color: colors.darkGray,
+    alignSelf: 'center',
+    marginTop: '5%',
+    marginBottom: '3%',
+  },
 });
