@@ -48,11 +48,13 @@ export const getAvailableDates = async (hospitalId) => {
 
 // 출입증 신청
 export const createAccessPass = async (form) => {
+  const patientCode = form.visitCategory === 'PATIENT' ? '' : form.patientCode;
+
   const response = await axios.post(
     '/passes',
     {
       visitCategory: form.visitCategory,
-      patientCode: form.patientCode,
+      patientCode,
       startAt: form.checkedDate,
     },
     {

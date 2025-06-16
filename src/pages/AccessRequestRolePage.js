@@ -143,7 +143,7 @@ const AccessRequestRolePage = ({ route }) => {
     } catch (error) {
       showNormalAlert({
         title: '방문증 신청 실패',
-        message: '방문증 신청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+        message: '방문증 신청 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
         showCancel: false,
       });
     } finally {
@@ -189,12 +189,22 @@ const AccessRequestRolePage = ({ route }) => {
           {isVerified && (
             <>
               <Text style={styles.contentTitle}>방문 일시 선택</Text>
-              <NormalCheckbox labels={availableDates} onChangeHandler={handleDateCheckbox} />
-              <NormalButton
-                title="방문증 신청"
-                onPressHandler={handleSubmitButton}
-                style={styles.submitButton}
-              />
+              {availableDates.length === 0 && (
+                <>
+                  <Text style={styles.noDatesText}>선택 가능한 방문일시가 없습니다.</Text>
+                  <NormalButton title="방문증 신청" style={styles.submitButton} isDisabled={true} />
+                </>
+              )}
+              {availableDates.length > 0 && (
+                <>
+                  <NormalCheckbox labels={availableDates} onChangeHandler={handleDateCheckbox} />
+                  <NormalButton
+                    title="방문증 신청"
+                    onPressHandler={handleSubmitButton}
+                    style={styles.submitButton}
+                  />
+                </>
+              )}
             </>
           )}
         </View>
