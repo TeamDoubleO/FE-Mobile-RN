@@ -1,12 +1,9 @@
 import { useRef } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import CardFlip from 'react-native-card-flip';
 import QRCode from 'react-native-qrcode-svg';
 import { styles } from './styles/QrCard.styles';
 import { colors } from '../../constants/colors';
-import NormalButton from '../../components/buttons/NormalButton';
-import { qrData_sample } from '../../mocks/mockQRData';
 
 // hasAccessAuthority: 출입 권한 여부, userVC : VC에 담을 사용자 정보, qrData : QR에 담을 JSON 문자열
 const QrCard = ({

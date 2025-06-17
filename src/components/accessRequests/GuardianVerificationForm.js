@@ -8,10 +8,10 @@ import NormalInput from '../textinputs/NormalInput';
 
 const GuardianVerificationForm = ({ hospitalId, onVerifiedHandler }) => {
   const { setLoading } = useAuthStore();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
   const [patientCode, setPatientCode] = useState(''); // 환자 번호 관리
   const [isVerified, setIsVerified] = useState(false);
-
-  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   // 환자 번호 검증 버튼 클릭 핸들러
   const handleVerifyPatient = async () => {

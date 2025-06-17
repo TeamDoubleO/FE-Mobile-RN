@@ -35,6 +35,7 @@ const getBirthDateFromRRN = (rrn) => {
 
 const SignUpPage = () => {
   const { setLoading } = useAuthStore();
+
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -119,7 +120,7 @@ const SignUpPage = () => {
       });
     } catch (error) {
       const status = error.response.data.status;
-      let message = `회원가입 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`;
+      let message = `회원가입 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`;
       if (status === 400) {
         message = `입력 정보 확인 후\n다시 가입해 주세요.`;
       } else if (status === 409) {

@@ -33,6 +33,7 @@ function convertToOldFormat(data) {
 export default function NoticeListPage() {
   const { setLoading } = useAuthStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
   const [noticeList, setNoticeList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -43,7 +44,7 @@ export default function NoticeListPage() {
       const data = await getNoticeList();
       setNoticeList(convertToOldFormat(data));
     } catch (error) {
-      console.error('알림 목록 가져오기 실패:', error);
+      console.log('알림 목록 가져오기 실패:', error);
     } finally {
       setLoading(false);
     }
@@ -83,7 +84,7 @@ export default function NoticeListPage() {
     } catch (error) {
       showNormalAlert({
         title: '알림 삭제 실패',
-        message: `알림 삭제 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+        message: `알림 삭제 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
         showCancel: false,
         confirmText: '확인',
       });

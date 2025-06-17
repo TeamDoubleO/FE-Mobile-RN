@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { getMessaging, getToken } from '@react-native-firebase/messaging';
 import { getApp } from '@react-native-firebase/app';
 import { loginUser } from '../apis/LoginApi';
+import { getMyInfo } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
 import { styles } from './styles/LoginPage.styles';
@@ -12,10 +13,10 @@ import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
 import NormalButton from '../components/buttons/NormalButton';
 import GrayButton from '../components/buttons/GrayButton';
-import { getMyInfo } from '../apis/MyPageApi';
 
 const LoginPage = () => {
   const { setIsLoggedIn, setLoading, setOnlyAccessToken, setUserInfo } = useAuthStore();
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   const [form, setForm] = useState({
     email: '', // 이메일
@@ -27,7 +28,6 @@ const LoginPage = () => {
   const [isPwValid, setIsPwValid] = useState(false); //비밀번호 유효성
 
   const navigation = useNavigation();
-  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   const navigateToSignUp = () => {
     navigation.navigate('SignUpVerificationPage');
@@ -79,7 +79,7 @@ const LoginPage = () => {
       const messaging = getMessaging(app);
       const fcmToken = await getToken(messaging);
 
-      console.log('token: ', fcmToken);
+      // console.log('token: ', fcmToken);
       const newForm = { ...form, fcmToken };
 
       //로그인 API 연결
@@ -90,6 +90,7 @@ const LoginPage = () => {
         setOnlyAccessToken(data.data.accessToken);
         const userData = await getMyInfo();
         setUserInfo(userData);
+
         showNormalAlert({
           title: '로그인 성공',
           message: `로그인에 성공하였습니다.\n메인 페이지로 이동합니다.`,

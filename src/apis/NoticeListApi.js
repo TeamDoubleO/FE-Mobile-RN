@@ -11,11 +11,11 @@ export const getMostRecentNotice = async () => {
   try {
     const response = await axios.get('/passes/notifications/recent');
     return response.data.data;
-  } catch (e) {
-    if (e.response?.status === 404) {
+  } catch (error) {
+    if (error.response?.status === 404) {
       return null;
     }
-    throw e;
+    throw error;
   }
 };
 

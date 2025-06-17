@@ -42,7 +42,8 @@ const maskRRN = (rrn) => {
 };
 
 const SignUpVerificationPage = () => {
-  //상태 변수
+  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
+
   const [form, setForm] = useState({
     name: '', //이름
     rrn: '', // 주민등록번호
@@ -53,7 +54,6 @@ const SignUpVerificationPage = () => {
   const [error, setError] = useState({}); // 에러 메시지
 
   const navigation = useNavigation();
-  const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   const navigateToLogin = () => {
     navigation.navigate('LoginPage');
@@ -123,7 +123,7 @@ const SignUpVerificationPage = () => {
     } catch (error) {
       showNormalAlert({
         title: '인증 오류',
-        message: `개인정보 인증 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+        message: `개인정보 인증 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
         showCancel: false,
       });
     }

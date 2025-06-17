@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import { useNoticeBadgeStore } from '../stores/noticeStore';
 import { getMostRecentNotice } from '../apis/NoticeListApi';
@@ -22,7 +22,7 @@ export function useNoticeBadge() {
       } else {
         setHasUnread(false);
       }
-    } catch (e) {
+    } catch (error) {
       setHasUnread(false);
     }
   };
