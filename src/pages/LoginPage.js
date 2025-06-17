@@ -8,8 +8,6 @@ import { loginUser } from '../apis/LoginApi';
 import { getMyInfo } from '../apis/MyPageApi';
 import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
-import { useAgentStore } from '../stores/agentStore';
-import { createCredoAgent } from '../credo/agentService';
 import { styles } from './styles/LoginPage.styles';
 import WaveHeader from '../components/headers/WaveHeader';
 import NormalInput from '../components/textinputs/NormalInput';
@@ -18,7 +16,6 @@ import GrayButton from '../components/buttons/GrayButton';
 
 const LoginPage = () => {
   const { setIsLoggedIn, setLoading, setOnlyAccessToken, setUserInfo } = useAuthStore();
-  const { setAgent } = useAgentStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   const [form, setForm] = useState({
@@ -82,7 +79,7 @@ const LoginPage = () => {
       const messaging = getMessaging(app);
       const fcmToken = await getToken(messaging);
 
-      console.log('token: ', fcmToken);
+      // console.log('token: ', fcmToken);
       const newForm = { ...form, fcmToken };
 
       //로그인 API 연결
@@ -94,21 +91,6 @@ const LoginPage = () => {
         const userData = await getMyInfo();
         setUserInfo(userData);
 
-        const agent = await createCredoAgent();
-        setAgent(agent);
-        // try {
-        //   const agent = await createCredoAgent();
-        //   setAgent(agent);
-        // } catch (error) {
-        //   showNormalAlert({
-        //     title: 'Agent 오류',
-        //     message:
-        //       'Agent 초기화에 실패했습니다. (자격 증명 등 DID 기능 제한될 수 있음)\n' +
-        //       (e.message || String(error)),
-        //     showCancel: false,
-        //   });
-        // }
-
         showNormalAlert({
           title: '로그인 성공',
           message: `로그인에 성공하였습니다.\n메인 페이지로 이동합니다.`,
@@ -118,7 +100,6 @@ const LoginPage = () => {
           },
         });
       } else {
-        console.error('로그인 에러:', error);
         showNormalAlert({
           title: '로그인 실패',
           message: `로그인에 실패했습니다.\n다시 시도해 주세요.`,

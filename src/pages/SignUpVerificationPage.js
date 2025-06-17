@@ -123,7 +123,7 @@ const SignUpVerificationPage = () => {
     } catch (error) {
       showNormalAlert({
         title: '인증 오류',
-        message: `개인정보 인증 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+        message: `개인정보 인증 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
         showCancel: false,
       });
     }

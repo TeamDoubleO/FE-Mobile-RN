@@ -69,7 +69,7 @@ const ChangePasswordPage = () => {
       }, 300);
     } catch (error) {
       const status = error.response.data.status;
-      let message = `비밀번호 변경 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`;
+      let message = `비밀번호 변경 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`;
 
       if (status === 400) {
         message = '기존 비밀번호를 다시 입력해 주세요.';

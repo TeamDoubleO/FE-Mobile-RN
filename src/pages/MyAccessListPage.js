@@ -168,6 +168,7 @@ const MyAccessListPage = () => {
         return '출입\n가능';
       }
     } else if (issuanceStatus === 'PENDING') return '승인\n대기';
+    else if (issuanceStatus === 'PROCESSING') return '발급중';
     else return '거절';
   };
 

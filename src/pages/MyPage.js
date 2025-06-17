@@ -49,7 +49,7 @@ export default function MyPage() {
     } catch (error) {
       showNormalAlert({
         title: '로그아웃 실패',
-        message: `로그아웃 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+        message: `로그아웃 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
         showCancel: false,
         confirmText: '확인',
       });
@@ -85,7 +85,7 @@ export default function MyPage() {
     } catch (error) {
       showNormalAlert({
         title: '회원 탈퇴 실패',
-        message: `회원 탈퇴 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
+        message: `회원 탈퇴 중\n오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.`,
         showCancel: false,
         confirmText: '확인',
       });

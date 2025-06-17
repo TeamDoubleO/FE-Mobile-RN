@@ -55,21 +55,6 @@ const PasswordConfirmModal = ({ navigationRef }) => {
     hidePasswordModal();
     navigationRef.current?.navigate(prevTab);
   };
-  // 모달 오류시 임시 코드
-  // const handleConfirm = async () => {
-  //   if (!isValidPassword(password)) {
-  //     setErrorText('8자 이상, 영문/숫자/특수문자를 포함해야 합니다.');
-  //     return;
-  //   }
-
-  //   // 임시: 비밀번호가 'Lgcns01!'이면 성공, 아니면 실패
-  //   if (password === 'Lgcns01!') {
-  //     navigationRef.current?.navigate(pendingTab);
-  //     hidePasswordModal();
-  //   } else {
-  //     setErrorText('비밀번호가 일치하지 않습니다. 다시 입력해 주세요.');
-  //   }
-  // };
 
   return (
     <Modal
