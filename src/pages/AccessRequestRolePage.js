@@ -8,7 +8,7 @@ import { useAuthStore } from '../stores/authStore';
 import { useNormalAlertStore } from '../stores/alertStore';
 import { useAgentStore } from '../stores/agentStore';
 import { createCredoAgent } from '../credo/agentService';
-import { startHospitalPolling } from '../credo/hospitalConnectService';
+import { startHospitalPolling, getAllVCs } from '../credo/hospitalConnectService';
 import { styles } from './styles/AccessRequestRolePage.styles';
 import NormalButton from '../components/buttons/NormalButton';
 import NormalCheckbox from '../components/checkboxes/NormalCheckbox';

@@ -77,6 +77,8 @@ export function startHospitalPolling({ agent, passId, hospitalId, onSuccess }) {
         await connectToHospital(agent, invitationUrl);
         clearInterval(globalTimer);
         console.log('✅ 병원 연결 완료');
+        const vcList = await getAllVCs(agent);
+        console.log('📄 내 VC 목록:', vcList);
         onSuccess?.();
       } else {
         console.log('⏳ 초대 정보 없음. 계속 대기 중...');
