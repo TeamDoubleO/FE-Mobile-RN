@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StatusBar } from 'react-native';
+import { StatusBar, AppState } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -108,7 +108,7 @@ export default function AppNavigator() {
     _hasHydrated, // hydration flag
   } = useAuthStore();
   const lastAuthTime = useAuthStore((state) => state.lastAuthTime);
-  const setLastAuthTime = useAuthStore((state) => state.setLastAuthTime);
+  const appState = useRef(AppState.currentState);
 
   const showPasswordModal = useModalStore((state) => state.showPasswordModal);
 
@@ -151,6 +151,27 @@ export default function AppNavigator() {
       showPasswordModal(tabName, currentRouteName || 'MainPage');
     }
   };
+
+  // 비밀번호 모달 백그라운드 -> 포그라운드 변경시 적용
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      // 포그라운드로 돌아올 때
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // 현재 라우트가 마이페이지(혹은 마이페이지 stack 내부)라면
+        if (currentRouteName === 'MyPage' || currentRouteName === 'MyPageStack') {
+          // 인증 만료됐으면 모달 띄우기
+          if (!lastAuthTime || Date.now() - lastAuthTime > PASSWORD_AUTH_VALID_MS) {
+            showPasswordModal('MyPageStack', currentRouteName, true);
+          }
+        }
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [currentRouteName, lastAuthTime]);
 
   const navTheme = {
     ...DefaultTheme,

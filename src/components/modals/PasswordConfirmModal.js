@@ -10,7 +10,8 @@ import NormalButton from '../buttons/NormalButton';
 import WaveHeader from '../headers/WaveHeader';
 
 const PasswordConfirmModal = ({ navigationRef }) => {
-  const { isPasswordModalVisible, pendingTab, prevTab, hidePasswordModal } = useModalStore();
+  const { isPasswordModalVisible, pendingTab, prevTab, isFromAppState, hidePasswordModal } =
+    useModalStore();
   const [password, setPassword] = useState('');
   const [errorText, setErrorText] = useState(''); // mediumText ErrorText
   const setLastAuthTime = useAuthStore((state) => state.setLastAuthTime);
@@ -56,7 +57,11 @@ const PasswordConfirmModal = ({ navigationRef }) => {
 
   const onClosePasswordModal = () => {
     hidePasswordModal();
-    navigationRef.current?.navigate(prevTab);
+    if (isFromAppState) {
+      navigationRef.current?.navigate('MainPage'); // 홈으로 강제 이동
+    } else {
+      navigationRef.current?.navigate(prevTab); // 이전 탭으로 이동
+    }
   };
 
   return (
