@@ -85,7 +85,7 @@ const QrCard = ({
             style={{ width: '100%' }}
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.qrTitle}>임시 출입 QR</Text>
+            <Text style={styles.qrTitle}>출입 QR</Text>
             <QRCode
               value={qrData}
               // value={qrData_sample}

@@ -59,7 +59,7 @@ const MyAccessDetailModal = ({ isVisible, onClose, onConfirm, data }) => {
             <Text style={styles.modalText}>방문자: {data.visitorType}</Text>
             <Text style={styles.modalText}>시작일: {data.startDate}</Text>
             <Text style={styles.modalText}>만료일: {data.expireDate}</Text>
-            <Text style={styles.modalText}>승인 여부: {data.approval}</Text>
+            <Text style={styles.modalText}>승인 여부: {data.approval.replace(/\n/g, '')}</Text>
             <Text style={styles.modalText}>환자 번호: {data.patientNumber}</Text>
           </View>
           <View style={[styles.textContainer, { alignItems: 'center' }]}>
