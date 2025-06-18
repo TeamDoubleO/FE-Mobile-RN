@@ -39,6 +39,10 @@ export const useAuthStore = create(
       // hydration(스토리지 복원) 상태
       _hasHydrated: false,
       setHasHydrated: (state) => set({ _hasHydrated: state }),
+
+      //인증 시각 관리
+      lastAuthTime: 0,
+      setLastAuthTime: (time) => set({ lastAuthTime: time }),
     }),
     {
       name: 'auth-storage',
@@ -47,6 +51,7 @@ export const useAuthStore = create(
         accessToken: state.accessToken,
         isLoggedIn: state.isLoggedIn,
         userInfo: state.userInfo,
+        lastAuthTime: state.lastAuthTime,
       }),
       // 복원 완료 시 _hasHydrated를 true로 변경
       onRehydrateStorage: () => (state, error) => {

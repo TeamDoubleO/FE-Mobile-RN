@@ -28,6 +28,7 @@ import AccessRequestRolePage from '../pages/AccessRequestRolePage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const PASSWORD_AUTH_VALID_MS = 1 * 10 * 1000;
 
 // StatusBar 스타일 설정
 const WHITE_TAB_SCREENS = ['MainPage', 'WelcomePage'];
@@ -106,6 +107,8 @@ export default function AppNavigator() {
     clearAccessToken,
     _hasHydrated, // hydration flag
   } = useAuthStore();
+  const lastAuthTime = useAuthStore((state) => state.lastAuthTime);
+  const setLastAuthTime = useAuthStore((state) => state.setLastAuthTime);
 
   const showPasswordModal = useModalStore((state) => state.showPasswordModal);
 
@@ -143,8 +146,10 @@ export default function AppNavigator() {
 
   // 탭 클릭 시 비밀번호 모달 호출
   const handleTabPress = (e, tabName) => {
-    e.preventDefault();
-    showPasswordModal(tabName, currentRouteName || 'MainPage');
+    if (!lastAuthTime || Date.now() - lastAuthTime > PASSWORD_AUTH_VALID_MS) {
+      e.preventDefault();
+      showPasswordModal(tabName, currentRouteName || 'MainPage');
+    }
   };
 
   const navTheme = {
