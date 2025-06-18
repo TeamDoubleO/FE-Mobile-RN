@@ -28,7 +28,7 @@ import AccessRequestRolePage from '../pages/AccessRequestRolePage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const PASSWORD_AUTH_VALID_MS = 1 * 10 * 1000;
+const PASSWORD_AUTH_VALID_MS = 5 * 60 * 1000; // 비밀번호 재인증 시간 (5분)
 
 // StatusBar 스타일 설정
 const WHITE_TAB_SCREENS = ['MainPage', 'WelcomePage'];
@@ -113,7 +113,7 @@ export default function AppNavigator() {
   const showPasswordModal = useModalStore((state) => state.showPasswordModal);
 
   // 현재 라우트 이름을 저장하는 state
-  const [currentRouteName, setCurrentRouteName] = useState('WelcomePage');
+  const [currentRouteName, setCurrentRouteName] = useState(isLoggedIn ? 'MainPage' : 'WelcomePage');
 
   // 알림 읽음 여부 관련
   const { hasUnread, markAllAsRead } = useNoticeBadge();
