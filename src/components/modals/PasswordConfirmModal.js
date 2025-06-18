@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, Modal } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { verifyPassword } from '../../apis/PasswordApi';
+import { useAuthStore } from '../../stores/authStore';
 import { useModalStore } from '../../stores/modalStore';
 import { styles } from './styles/PasswordConfirmModal.styles';
 import NormalInput from '../textinputs/NormalInput';
@@ -9,9 +10,11 @@ import NormalButton from '../buttons/NormalButton';
 import WaveHeader from '../headers/WaveHeader';
 
 const PasswordConfirmModal = ({ navigationRef }) => {
-  const { isPasswordModalVisible, pendingTab, prevTab, hidePasswordModal } = useModalStore();
+  const { isPasswordModalVisible, pendingTab, prevTab, isFromAppState, hidePasswordModal } =
+    useModalStore();
   const [password, setPassword] = useState('');
   const [errorText, setErrorText] = useState(''); // mediumText ErrorText
+  const setLastAuthTime = useAuthStore((state) => state.setLastAuthTime);
 
   useEffect(() => {
     if (isPasswordModalVisible) {
@@ -43,7 +46,8 @@ const PasswordConfirmModal = ({ navigationRef }) => {
 
     try {
       await verifyPassword(password);
-
+      // 인증 성공 시 인증 시각 저장
+      setLastAuthTime(Date.now());
       navigationRef.current?.navigate(pendingTab);
       hidePasswordModal();
     } catch (error) {
@@ -53,7 +57,11 @@ const PasswordConfirmModal = ({ navigationRef }) => {
 
   const onClosePasswordModal = () => {
     hidePasswordModal();
-    navigationRef.current?.navigate(prevTab);
+    if (isFromAppState) {
+      navigationRef.current?.navigate('MainPage'); // 홈으로 강제 이동
+    } else {
+      navigationRef.current?.navigate(prevTab); // 이전 탭으로 이동
+    }
   };
 
   return (

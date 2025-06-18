@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StatusBar } from 'react-native';
+import { StatusBar, AppState } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -28,6 +28,7 @@ import AccessRequestRolePage from '../pages/AccessRequestRolePage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const PASSWORD_AUTH_VALID_MS = 5 * 60 * 1000; // 비밀번호 재인증 시간 (5분)
 
 // StatusBar 스타일 설정
 const WHITE_TAB_SCREENS = ['MainPage', 'WelcomePage'];
@@ -106,11 +107,13 @@ export default function AppNavigator() {
     clearAccessToken,
     _hasHydrated, // hydration flag
   } = useAuthStore();
+  const lastAuthTime = useAuthStore((state) => state.lastAuthTime);
+  const appState = useRef(AppState.currentState);
 
   const showPasswordModal = useModalStore((state) => state.showPasswordModal);
 
   // 현재 라우트 이름을 저장하는 state
-  const [currentRouteName, setCurrentRouteName] = useState('WelcomePage');
+  const [currentRouteName, setCurrentRouteName] = useState(isLoggedIn ? 'MainPage' : 'WelcomePage');
 
   // 알림 읽음 여부 관련
   const { hasUnread, markAllAsRead } = useNoticeBadge();
@@ -143,9 +146,32 @@ export default function AppNavigator() {
 
   // 탭 클릭 시 비밀번호 모달 호출
   const handleTabPress = (e, tabName) => {
-    e.preventDefault();
-    showPasswordModal(tabName, currentRouteName || 'MainPage');
+    if (!lastAuthTime || Date.now() - lastAuthTime > PASSWORD_AUTH_VALID_MS) {
+      e.preventDefault();
+      showPasswordModal(tabName, currentRouteName || 'MainPage');
+    }
   };
+
+  // 비밀번호 모달 백그라운드 -> 포그라운드 변경시 적용
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      // 포그라운드로 돌아올 때
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // 현재 라우트가 마이페이지(혹은 마이페이지 stack 내부)라면
+        if (currentRouteName === 'MyPage' || currentRouteName === 'MyPageStack') {
+          // 인증 만료됐으면 모달 띄우기
+          if (!lastAuthTime || Date.now() - lastAuthTime > PASSWORD_AUTH_VALID_MS) {
+            showPasswordModal('MyPageStack', currentRouteName, true);
+          }
+        }
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [currentRouteName, lastAuthTime]);
 
   const navTheme = {
     ...DefaultTheme,
