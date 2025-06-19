@@ -176,12 +176,42 @@ const MyAccessListPage = () => {
   const getHospitalName = (hospitalId) => getHospitalNameByList(hospitalId, hospitalNameList);
 
   // 만료/거절 제외 & 시작일 오름차순 정렬
+  // 상태 우선순위 함수 추가
+  const getStatusPriority = (startedAt, expiredAt, issuanceStatus) => {
+    const status = getApprovalStatus(startedAt, expiredAt, issuanceStatus);
+    switch (status) {
+      case '출입\n가능':
+        return 0;
+      case '출입\n대기':
+        return 1;
+      case '발급중':
+        return 2;
+      case '승인\n대기':
+        return 3;
+      default:
+        return 99;
+    }
+  };
+
+  // 정렬 및 필터링
   const filteredAndSortedList = (myAccessList || [])
     .filter((item) => {
       const status = getApprovalStatus(item.startedAt, item.expiredAt, item.issuanceStatus);
-      return status !== '만료' && status !== '거절';
+      return (
+        status === '출입\n가능' ||
+        status === '출입\n대기' ||
+        status === '발급중' ||
+        status === '승인\n대기'
+      );
     })
-    .sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));
+    .sort((a, b) => {
+      const aPriority = getStatusPriority(a.startedAt, a.expiredAt, a.issuanceStatus);
+      const bPriority = getStatusPriority(b.startedAt, b.expiredAt, b.issuanceStatus);
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+      return new Date(a.startedAt) - new Date(b.startedAt);
+    });
 
   // NormalListDeep에 넘길 데이터 가공
   const sections = filteredAndSortedList.reduce((acc, cur) => {

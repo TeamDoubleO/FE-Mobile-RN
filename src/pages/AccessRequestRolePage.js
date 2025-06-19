@@ -123,6 +123,12 @@ const AccessRequestRolePage = ({ route }) => {
       let res;
       try {
         res = await createAccessPass(form);
+        showNormalAlert({
+          title: '방문증 신청 완료',
+          message: `방문증 신청이 완료되었습니다.\n메인 페이지로 이동합니다.`,
+          showCancel: false,
+          onConfirmHandler: navigateToHome,
+        });
         console.log('방문증 신청 결과:', res?.data);
       } catch (error) {
         console.log('방문증 신청 중 오류 발생:', error);
@@ -146,14 +152,6 @@ const AccessRequestRolePage = ({ route }) => {
         agent,
         passId: res.data.passId,
         hospitalId,
-        onSuccess: () => {
-          showNormalAlert({
-            title: '방문증 신청 완료',
-            message: `방문증 신청이 완료되었습니다.\n메인 페이지로 이동합니다.`,
-            showCancel: false,
-            onConfirmHandler: navigateToHome,
-          });
-        },
       });
       console.log('startHospitalPolling 호출 후 pollStopRef:', pollStopRef.current);
     } catch (error) {
@@ -168,13 +166,13 @@ const AccessRequestRolePage = ({ route }) => {
   };
 
   // 🔁 컴포넌트 언마운트 시 polling 중단
-  useEffect(() => {
-    return () => {
-      if (pollStopRef.current) {
-        pollStopRef.current(); // clearInterval 호출
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (pollStopRef.current) {
+  //       pollStopRef.current(); // clearInterval 호출
+  //     }
+  //   };
+  // }, []);
 
   return (
     <>
