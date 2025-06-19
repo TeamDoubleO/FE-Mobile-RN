@@ -13,7 +13,7 @@ import Config from 'react-native-config';
 //const HOSPITAL_INVITATION_URL =
 //'http://192.168.0.115:8020?oob=eyJAdHlwZSI6ICJodHRwczovL2RpZGNvbW0ub3JnL291dC1vZi1iYW5kLzEuMS9pbnZpdGF0aW9uIiwgIkBpZCI6ICIxZTE4YjUzMi1lM2QxLTQxMDEtODU3ZC05NzljY2ViZjM3NjMiLCAibGFiZWwiOiAiXHVhYzE1XHViZDgxXHVjMGJjXHVjMTMxXHViY2QxXHVjNmQwIiwgImhhbmRzaGFrZV9wcm90b2NvbHMiOiBbImh0dHBzOi8vZGlkY29tbS5vcmcvZGlkZXhjaGFuZ2UvMS4wIl0sICJhY2NlcHQiOiBbImRpZGNvbW0vYWlwMjtlbnY9cmZjMTkiXSwgInNlcnZpY2VzIjogWyJkaWQ6cGVlcjoyLlZ6Nk1rZzNzVFY0VVZjUXV6Y1ZWMlZwMlBTTVZWSFl6VzNBZWZLU0xIVXNVVEFuTVkuRXo2TFNjdVo2eUJGNDFyNWJtU2s0cDVuN2NBQ1RwSEdYVXFxMVRlMkRLS21EcmI1Vy5TZXlKcFpDSTZJaU5rYVdSamIyMXRMVEFpTENKMElqb2laR2xrTFdOdmJXMTFibWxqWVhScGIyNGlMQ0p3Y21sdmNtbDBlU0k2TUN3aWNtVmphWEJwWlc1MFMyVjVjeUk2V3lJamEyVjVMVEVpWFN3aWNpSTZXMTBzSW5NaU9pSm9kSFJ3T2k4dk1Ua3lMakUyT0M0d0xqRXhOVG80TURJd0luMCJdfQ';
 
-const POLL_INTERVAL = 3000;
+const POLL_INTERVAL = 2000;
 
 // 병원 초대 URL 가져오는 함수 (API 호출)
 export async function getHospitalInvitation(passId, hospitalId) {
@@ -62,7 +62,7 @@ export async function connectToHospital(agent, invitationUrl) {
 let globalTimer = null;
 
 // Hospital Polling 함수 (타이머 반환)
-export function startHospitalPolling({ agent, passId, hospitalId, onSuccess }) {
+export function startHospitalPolling({ agent, passId, hospitalId }) {
   if (globalTimer) {
     clearInterval(globalTimer);
     globalTimer = null;
@@ -79,7 +79,6 @@ export function startHospitalPolling({ agent, passId, hospitalId, onSuccess }) {
         console.log('✅ 병원 연결 완료');
         const vcList = await getAllVCs(agent);
         console.log('📄 내 VC 목록:', vcList);
-        onSuccess?.();
       } else {
         console.log('⏳ 초대 정보 없음. 계속 대기 중...');
       }
