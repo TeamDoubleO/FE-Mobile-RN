@@ -91,7 +91,7 @@ function isQrAvailable(item) {
 }
 
 const MainPage = () => {
-  const { setLoading, userInfo } = useAuthStore();
+  const { loading, setLoading, userInfo } = useAuthStore();
   const showNormalAlert = useNormalAlertStore.getState().showNormalAlert;
 
   // 임시: 상태변수로 출입 권한 제어
@@ -148,7 +148,7 @@ const MainPage = () => {
         }
       };
       fetchData();
-    }, [setLoading, myAccessList]),
+    }, [setLoading]),
   );
 
   // hospitalNameList, myAccessList 준비되면 userVC 생성
